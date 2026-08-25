@@ -1,0 +1,6 @@
+route,libelle,code_eurostat,profil
+CDG-JFK,Paris CDG vers New York JFK,FR_LFPG_US_KJFK,long-courrier mixte
+CDG-GRU,Paris CDG vers São Paulo,FR_LFPG_BR_SBGR,"long-courrier, saisons inversées"
+CDG-FCO,Paris CDG vers Rome,FR_LFPG_IT_LIRF,court-courrier loisir
+CDG-FRA,Paris CDG vers Francfort,FR_LFPG_DE_EDDF,court-courrier affaires
+ORY-AJA,Paris Orly vers Ajaccio,FR_LFPO_FR_LFKJ,domestique très saisonnier

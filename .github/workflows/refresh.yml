@@ -1,0 +1,53 @@
+name: Ingestion mensuelle et publication
+
+# Le 5 de chaque mois. La serie Eurostat ne parait qu'une fois par an :
+# ce passage mensuel sert a la capter des sa sortie, et a reconstruire le site
+# quand de nouveaux exports Trends ont ete deposes.
+on:
+  schedule:
+    - cron: "0 6 5 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Aucune dependance a installer : c'est voulu, le job ne peut pas casser
+      # sur une montee de version de bibliotheque.
+      - name: Ingestion
+        run: python ingest.py --refresh
+
+      - name: Construction du site
+        run: python build_site.py
+
+      - name: Committer si quelque chose a change
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add data/out data/raw/trafic docs
+          if git diff --staged --quiet; then
+            echo "aucun changement"
+          else
+            git commit -m "Ingestion mensuelle $(date -u +%Y-%m-%d)"
+            git push
+          fi
+
+      # Les controles en erreur font echouer ingest.py, donc ce job.
+      # Un echec est un signal utile : la donnee a change de forme.
+      - name: Publier les controles en resume
+        if: always()
+        run: |
+          if [ -f data/out/qualite.csv ]; then
+            echo '### Controles qualite' >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            cat data/out/qualite.csv >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          fi

@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.DS_Store
+
+# Les sorties sont versionnees : le dashboard les lit depuis GitHub.
+# Les exports bruts aussi : le calcul doit rester reproductible.

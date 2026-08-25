@@ -1,0 +1,10 @@
+route,marche,terme,langue
+CDG-JFK,FR,vol new york,francais
+CDG-JFK,US,flights to paris,anglais
+CDG-GRU,FR,vol sao paulo,francais
+CDG-GRU,BR,voos para paris,portugais
+CDG-FCO,FR,vol rome,francais
+CDG-FCO,IT,voli parigi,italien
+CDG-FRA,FR,vol francfort,francais
+CDG-FRA,DE,flug paris,allemand
+ORY-AJA,FR,vol ajaccio,francais
