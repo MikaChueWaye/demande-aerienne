@@ -241,10 +241,12 @@ p.intro b{color:var(--ink)}
 
 /* ---------- tableaux ---------- */
 .cadre{overflow-x:auto;border:1px solid var(--filet);border-radius:3px;background:var(--blanc);margin-top:18px}
-table{border-collapse:collapse;width:100%%;font-size:13.5px}
-th,td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--filet)}
-th{background:#F7F0EA;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
-   color:var(--soft);white-space:nowrap}
+table{border-collapse:collapse;width:100%%;font-size:13px}
+th,td{padding:7px 10px;text-align:left;border-bottom:1px solid var(--filet)}
+th{background:#F7F0EA;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+   color:var(--soft);line-height:1.3;vertical-align:bottom}
+th.court{width:64px}
+td.num{white-space:nowrap}
 tbody tr:last-child td{border-bottom:0}
 tbody tr:hover{background:#FBF6F2}
 td.num{text-align:right;font-variant-numeric:tabular-nums}
@@ -502,14 +504,15 @@ def page_marches(routes_lib, profils, calib_idx, marches):
                  'bien qu\'elle échoue ici, parce qu\'une mesure qui ne marche pas se '
                  'publie avec son défaut plutôt qu\'elle ne se cache.</p>')
     corps.append('<div class="cadre"><table><tr><th>Route</th><th>Marché</th><th>Fenêtre</th>'
-                 '<th>Pic recherche</th><th>Pic trafic</th><th>Écart des pics</th>'
-                 '<th>Écart des centres</th><th>Concentration</th><th>Amplitude</th>'
-                 '<th>Corrélation croisée</th><th>Fiable</th></tr>')
+                 '<th class="court">Pic<br>recherche</th><th class="court">Pic<br>trafic</th>'
+                 '<th class="court">Écart<br>des pics</th><th class="court">Écart<br>des centres</th>'
+                 '<th class="court">Concentration</th><th class="court">Amplitude</th>'
+                 '<th class="court">Corrélation<br>croisée</th><th class="court">Fiable</th></tr>')
     for (route, marche, fen), r in sorted(calib_idx.items()):
-        corps.append('<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td>'
+        corps.append('<tr><td title="%s"><b>%s</b></td><td>%s</td><td>%s</td><td>%s</td><td>%s</td>'
                      '<td class="num">%s</td><td class="num">%s</td><td class="num">%s</td>'
                      '<td class="num">%s</td><td class="num">%s</td><td class="%s">%s</td></tr>'
-                     % (esc(routes_lib.get(route, route)), esc(marche), esc(fen),
+                     % (esc(routes_lib.get(route, route)), esc(route), esc(marche), esc(fen),
                         MOIS[int(r["pic_recherche"]) - 1], MOIS[int(r["pic_trafic"]) - 1],
                         r["ecart_pics"], r["ecart_cg"], r["concentration_recherche"],
                         r["amplitude_recherche"], r["correlation_croisee"],
