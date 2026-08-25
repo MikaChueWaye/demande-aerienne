@@ -309,7 +309,7 @@ footer{max-width:var(--page);margin:56px auto 0;padding:22px 32px 0;border-top:1
 """ % (TERRA, CREAM, INK, INK_SOFT)
 
 SOUS_TITRE = ("Le trafic passagers est publié une fois par an, avec près d'un an de "
-              "retard. La recherche, elle, est visible tout de suite. Ce tableau de bord "
+              "retard. La recherche est visible tout de suite. Ce tableau de bord "
               "mesure le temps qui les sépare, marché par marché, pour savoir quand "
               "engager un budget d'acquisition.")
 
@@ -379,7 +379,7 @@ def bloc_resultat(routes_lib, calib_idx):
         return "", ""
     _, route, bas, haut = c
     lib = routes_lib.get(route, route)
-    phrase = ("Sur %s, le marché %s cherche %d mois avant le vol, le marché %s seulement %d."
+    phrase = ("Sur %s, le marché %s cherche %d mois avant le vol, le marché %s %d mois."
               % (lib, haut[1], haut[0], bas[1], bas[0]))
     html = (
         '<div class="hero">'
@@ -390,8 +390,7 @@ def bloc_resultat(routes_lib, calib_idx):
         '<div class="tuile"><div class="n">%d</div>'
         '<div class="q">couples route et marché suivis,<br>dont <b>%d mesures fiables</b></div></div>'
         '</div>'
-        '<p class="phrase">%s Un calendrier budgétaire unique se trompe '
-        'forcément sur l\'un des deux.</p>'
+        '<p class="phrase">%s</p>'
         % (haut[0], haut[1], esc(lib), bas[0], bas[1], total, fiables, esc(phrase)))
     return html, phrase
 
@@ -457,12 +456,11 @@ def page_calendrier(routes_lib, trafic, calib_idx, marches, resultat):
                  'dessinée dans la grille est calculée sur <b>2022 à 2024</b>, parce que '
                  'c\'est celle d\'aujourd\'hui, un mois étant dit en haute saison quand '
                  'il dépasse de 10 % la moyenne annuelle, en moyenne saison entre 95 et 110 % '
-                 'de cette moyenne, ce que le métier appelle l\'épaule. Autrement dit : saison actuelle, '
-                 'avance calibrée sur le comportement stable d\'avant la pandémie.</p>'
+                 'de cette moyenne, ce que le métier appelle l\'épaule.</p>'
                  '<p class="intro">Les lignes marquées peu fiables ont un profil trop plat '
                  'ou trop irrégulier pour qu\'un pic les résume. Elles restent affichées '
                  'plutôt que retirées : un marché sans saison marquée n\'a pas de fenêtre '
-                 'à pousser, et c\'est en soi une information.</p>')
+                 'à pousser.</p>')
     return "\n".join(corps)
 
 
@@ -496,13 +494,12 @@ def page_marches(routes_lib, profils, calib_idx, marches):
     corps.append('</div>')
 
     corps.append('<h2>Les trois mesures, côte à côte</h2>'
-                 '<p class="intro">L\'écart des pics est l\'indicateur de tête, il se lit '
-                 'sans statistiques. L\'écart des centres de gravité prend toute la masse '
+                 '<p class="intro">L\'écart des pics est l\'indicateur de tête. '
+                 'L\'écart des centres de gravité prend toute la masse '
                  'de la saison et pas seulement son sommet : quand les deux se rejoignent, '
                  'la mesure tient ; quand ils divergent, le profil est plat ou bimodal et '
-                 'la ligne est marquée peu fiable. La corrélation croisée est conservée '
-                 'bien qu\'elle échoue ici, parce qu\'une mesure qui ne marche pas se '
-                 'publie avec son défaut plutôt qu\'elle ne se cache.</p>')
+                 'la ligne est marquée peu fiable. La corrélation croisée est conservée pour '
+                 'transparence, bien qu\'elle échoue sur les profils bimodaux.</p>')
     corps.append('<div class="cadre"><table><tr><th>Route</th><th>Marché</th><th>Fenêtre</th>'
                  '<th class="court">Pic<br>recherche</th><th class="court">Pic<br>trafic</th>'
                  '<th class="court">Écart<br>des pics</th><th class="court">Écart<br>des centres</th>'
@@ -524,8 +521,7 @@ def page_marches(routes_lib, profils, calib_idx, marches):
 def page_qualite(qualite, adoption, trafic):
     corps = ['<h2>Contrôles automatiques</h2>',
              '<p class="intro">Exécutés à chaque ingestion. Un contrôle en erreur fait '
-             'échouer le traitement, donc la planification mensuelle : un échec est un '
-             'signal, pas un silence.</p>',
+             'échouer le traitement, donc la planification mensuelle.</p>',
              '<div class="cadre"><table><tr><th>Contrôle</th><th>Statut</th><th>Détail</th><th>Vérifié le</th></tr>']
     for q in qualite:
         corps.append('<tr><td>%s</td><td class="%s">%s</td><td>%s</td><td>%s</td></tr>'
@@ -539,8 +535,8 @@ def page_qualite(qualite, adoption, trafic):
         corps.append('<h2>Où l\'instrument se dégrade le plus vite</h2>')
         corps.append('<p class="intro">Cette mesure repose sur ce que les gens tapent '
                      'dans Google. À mesure que la recherche de voyage se déplace vers '
-                     'les assistants, elle mesure une part qui rétrécit, et rien dans '
-                     'les données ne le signale. L\'indice ci-dessous est un proxy '
+                     'les assistants, elle mesure une part qui rétrécit. L\'indice '
+                     'ci-dessous est un proxy '
                      '<b>faible</b> : chercher un assistant mesure l\'intérêt pour '
                      'l\'outil, pas son usage pour préparer un voyage. Il sert à comparer '
                      'des marchés entre eux, pas à quantifier une perte.</p>')
@@ -554,19 +550,19 @@ def page_qualite(qualite, adoption, trafic):
     corps.append('<h2>Ce que cette donnée ne permet pas de dire</h2><ul class="lim">')
     for lim in [
         "Le trafic par route est publié une fois par an, avec environ dix mois de retard. "
-        "Il sert à calibrer un décalage, pas à suivre l'actualité. C'est la recherche qui "
-        "est fraîche, et c'est elle qui sert au pilotage.",
+        "Il sert à calibrer un décalage, pas à suivre l'actualité. Le pilotage repose "
+        "sur la recherche, qui est à jour.",
         "L'indice de recherche est relatif et normalisé sur la période demandée. Deux "
         "marchés ne se comparent pas en niveau, seulement en forme.",
         "Corrélation n'est pas causalité. Recherche et trafic partagent une saisonnalité "
         "qui suffit à produire une corrélation forte sans lien causal, d'où la double mesure.",
         "Le mois est la granularité plancher. Un décalage réel de six semaines ressort à "
-        "un ou deux mois, pas mieux.",
+        "un ou deux mois.",
         "Le trafic est bidirectionnel et toutes compagnies confondues. Un aller-retour "
         "compte dans les deux sens, donc le sens du vol ne permet pas de séparer les "
         "marchés : le trafic reste commun à la route, seule la recherche se ventile.",
-        "2020 et 2021 sont exclus des calibrations. La pandémie détruit toute corrélation "
-        "et n'apprend rien sur un délai d'anticipation normal.",
+        "2020 et 2021 sont exclus des calibrations. Ces deux années sont atypiques et ne "
+        "renseignent pas sur un délai d'anticipation normal.",
         "Aucune donnée de prix, de capacité offerte ni de dépense publicitaire. Ce tableau "
         "de bord ne dit donc rien de la rentabilité d'une campagne.",
         "Une avance de N mois et un retard de 12 moins N mois sont indiscernables sur un "
