@@ -418,7 +418,8 @@ def page_calendrier(routes_lib, trafic, calib_idx, marches, resultat):
              'donc celle où le budget doit être engagé.</p>',
              '<div class="leg">'
              '<span><i class="haute"></i> haute saison de trafic</span>'
-             '<span><i class="epaule"></i> épaule</span>'
+             '<span><i class="epaule"></i> moyenne saison</span>'
+             '<span><i class="basse"></i> basse saison</span>'
              '<span><i class="pousse"></i> à pousser</span>'
              '<span><i class="pousse-e"></i> à préparer</span></div>',
              '<div class="cadre" style="border:0;background:none"><table class="cal"><tr><th></th>'
@@ -453,7 +454,8 @@ def page_calendrier(routes_lib, trafic, calib_idx, marches, resultat):
                  '2020 ni 2021 que la pandémie rend inexploitables. La saison de trafic '
                  'dessinée dans la grille est calculée sur <b>2022 à 2024</b>, parce que '
                  'c\'est celle d\'aujourd\'hui, un mois étant dit en haute saison quand '
-                 'il dépasse de 10 % la moyenne annuelle. Autrement dit : saison actuelle, '
+                 'il dépasse de 10 % la moyenne annuelle, en moyenne saison entre 95 et 110 % '
+                 'de cette moyenne, ce que le métier appelle l\'épaule. Autrement dit : saison actuelle, '
                  'avance calibrée sur le comportement stable d\'avant la pandémie.</p>'
                  '<p class="intro">Les lignes marquées peu fiables ont un profil trop plat '
                  'ou trop irrégulier pour qu\'un pic les résume. Elles restent affichées '
