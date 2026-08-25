@@ -1,46 +1,123 @@
-<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Demande aérienne, Par marché</title><style>
-:root{--terra:#9A543E;--cream:#F4EDE7;--ink:#222124;--soft:#6E625C}
+<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Sur Paris CDG vers New York JFK, le marché FR cherche 7 mois avant le vol, le marché US seulement 2."><link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' fill='%239A543E'/><path d='M2 11 L6 5 L9 9 L14 3' stroke='%23F4EDE7' stroke-width='1.7' fill='none'/></svg>"><title>Demande aérienne, Par marché</title><style>
+@font-face{font-family:Aileron;src:url("fonts/Aileron-Regular.otf") format("opentype");font-weight:400;font-display:swap}
+@font-face{font-family:Aileron;src:url("fonts/Aileron-Bold.otf") format("opentype");font-weight:700;font-display:swap}
+
+:root{
+  --terra:#9A543E;--cream:#F4EDE7;--ink:#222124;--soft:#6E625C;
+  --terra-fonce:#7E4231;--terra-clair:#D8B3A3;--terra-pale:#EFE0D7;
+  --action:#3F6B62;--action-clair:#B4CBC4;
+  --blanc:#FFFDFC;--filet:#E4D6CC;
+  --page:1120px;
+}
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--cream);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;padding-bottom:60px}
-header{background:var(--terra);color:#fff;padding:22px 28px}
-header h1{font-size:20px;font-weight:700;letter-spacing:.01em}
-header p{font-size:14px;opacity:.9;margin-top:4px;max-width:70ch}
-nav{background:#82442f;padding:0 28px}
-nav a{display:inline-block;color:#fff;padding:11px 16px 10px;text-decoration:none;font-size:14px;opacity:.75}
-nav a.on{opacity:1;box-shadow:inset 0 -3px 0 #fff}
-nav a:hover{opacity:1}
-main{padding:26px 28px;max-width:1180px}
-h2{font-size:17px;margin:30px 0 10px}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--cream);color:var(--ink);
+  font:400 15.5px/1.6 Aileron,"Segoe UI",system-ui,sans-serif;
+  padding-bottom:72px;
+}
+
+/* ---------- en-tete ---------- */
+header{background:var(--terra);color:#fff;padding:40px 32px 34px}
+.dedans{max-width:var(--page);margin:0 auto}
+header .oeil{font-size:11.5px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;opacity:.72}
+header h1{font-size:33px;line-height:1.14;font-weight:700;letter-spacing:-.015em;margin:10px 0 12px;max-width:26ch}
+header p{font-size:15.5px;line-height:1.6;opacity:.93;max-width:66ch}
+
+/* ---------- navigation ---------- */
+nav{background:var(--terra-fonce);position:sticky;top:0;z-index:5}
+nav .dedans{display:flex;gap:2px;padding:0 32px}
+nav a{color:#fff;padding:14px 18px 12px;text-decoration:none;font-size:14.5px;opacity:.7;border-bottom:3px solid transparent}
+nav a:hover{opacity:1;background:rgba(255,255,255,.07)}
+nav a.on{opacity:1;border-bottom-color:#fff;font-weight:700}
+
+main{max-width:var(--page);margin:0 auto;padding:38px 32px 0}
+
+/* ---------- titres et texte ---------- */
+h2{font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--terra);
+   margin:52px 0 4px;padding-bottom:9px;border-bottom:2px solid var(--terra)}
 h2:first-child{margin-top:0}
-p.intro{max-width:78ch;margin-bottom:14px}
-table{border-collapse:collapse;width:100%;font-size:13.5px;background:#fff}
-th,td{border:1px solid #e2d5cc;padding:6px 9px;text-align:left;vertical-align:top}
-th{background:#f6efe9;font-weight:700}
+h3{font-size:15px;font-weight:700;letter-spacing:-.005em}
+p.intro{max-width:76ch;margin:16px 0 20px;color:#3B3739}
+p.intro b{color:var(--ink)}
+
+/* ---------- bandeau de resultat ---------- */
+.hero{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin:22px 0 4px}
+.tuile{background:var(--blanc);border:1px solid var(--filet);border-radius:3px;padding:18px 20px 16px}
+.tuile .n{font-size:42px;line-height:1;font-weight:700;letter-spacing:-.03em;color:var(--terra)}
+.tuile .n small{font-size:17px;font-weight:700;letter-spacing:0;margin-left:3px}
+.tuile .q{font-size:13.5px;line-height:1.45;color:var(--soft);margin-top:9px}
+.tuile .q b{color:var(--ink);font-weight:700}
+.tuile.act .n{color:var(--action)}
+.phrase{background:var(--blanc);border-left:4px solid var(--terra);border-radius:0 3px 3px 0;
+        padding:16px 20px;margin:16px 0 0;font-size:16.5px;line-height:1.5;max-width:82ch}
+
+/* ---------- tableaux ---------- */
+.cadre{overflow-x:auto;border:1px solid var(--filet);border-radius:3px;background:var(--blanc);margin-top:18px}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--filet)}
+th{background:#F7F0EA;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+   color:var(--soft);white-space:nowrap}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:#FBF6F2}
 td.num{text-align:right;font-variant-numeric:tabular-nums}
-.cal td,.cal th{padding:0;text-align:center;font-size:11.5px}
-.cal th.mois{width:52px;font-weight:400;color:var(--soft)}
-.cal td.lib{text-align:left;padding:5px 9px;font-size:13px;white-space:nowrap}
-.cal td.c{height:22px}
-.haute{background:var(--terra);color:#fff;font-weight:700}
-.epaule{background:#d8b3a3}
-.basse{background:#fff}
-.pousse{background:#4f7d5e;color:#fff;font-weight:700}
-.pousse-e{background:#b6cbbc}
-.leg{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--soft);margin:8px 0 4px}
-.leg span{display:inline-flex;align-items:center;gap:6px}
-.leg i{width:13px;height:13px;display:inline-block;border:1px solid #e2d5cc}
-.cartes{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px}
-.carte{background:#fff;border:1px solid #e2d5cc;padding:12px 14px}
-.carte h3{font-size:14px;margin-bottom:2px}
-.carte .meta{font-size:12px;color:var(--soft);margin-bottom:6px}
+td b{font-weight:700}
+
+/* ---------- calendrier ---------- */
+.cal{border-collapse:separate;border-spacing:2px;font-size:11.5px}
+.cal th,.cal td{border:0;padding:0;text-align:center}
+.cal th.mois{font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+             color:var(--soft);background:none;padding-bottom:5px}
+.cal td.lib{width:268px;text-align:left;padding:6px 18px 6px 2px;font-size:13.5px;
+            white-space:nowrap;background:none;border-right:1px solid var(--filet)}
+.cal td.c{width:5.4%}
+.cal tr.espace td{height:7px;background:none}
+.cal td.lib .m{color:var(--terra);font-weight:700}
+.cal td.lib .d{display:block;font-size:11.5px;color:var(--soft);font-weight:400;margin-top:1px}
+.cal td.c{height:23px;border-radius:2px}
+.haute{background:var(--terra)}
+.epaule{background:var(--terra-clair)}
+.basse{background:#EDE3DB}
+.pousse{background:var(--action)}
+.pousse-e{background:var(--action-clair)}
+.leg{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--soft);margin:18px 0 10px}
+.leg span{display:inline-flex;align-items:center;gap:7px}
+.leg i{width:14px;height:14px;border-radius:2px;display:inline-block}
+
+/* ---------- cartes ---------- */
+.cartes{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-top:18px}
+.carte{background:var(--blanc);border:1px solid var(--filet);border-radius:3px;padding:15px 17px 9px}
+.carte .meta{font-size:12.5px;color:var(--soft);margin:3px 0 10px;line-height:1.45}
+.carte .meta b{color:var(--ink)}
 .graphe{width:100%;height:auto;display:block}
-.vide{font-size:12.5px;color:var(--soft);padding:24px 0}
-.drapeau{color:#9a6b1f;font-weight:700}
-.ok{color:#2e6b45}.alerte{color:#9a6b1f}.erreur{color:#a33}
-.bandeau{background:#8a2f2f;color:#fff;padding:11px 28px;font-size:14px;font-weight:700}
-footer{padding:20px 28px;font-size:12.5px;color:var(--soft);max-width:88ch}
-ul.lim{margin:6px 0 0 18px}ul.lim li{margin-bottom:5px;max-width:84ch}
-</style></head><body><header><h1>Quand la demande de voyage se cherche-t-elle&nbsp;?</h1><p>Le trafic passagers paraît avec près d'un an de retard, la recherche est visible tout de suite. Ce tableau de bord mesure le temps qui les sépare, par marché, pour savoir quand engager un budget d'acquisition.</p></header><nav><a href="index.html">Calendrier</a><a href="marches.html" class="on">Par marché</a><a href="qualite.html">Qualité et limites</a></nav><main><h2>Profils saisonniers, fenêtre 2015-2019</h2>
+.vide{font-size:12.5px;color:var(--soft);padding:26px 0}
+.drapeau{color:#8A6A1C;font-weight:700}
+.pastille{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+          padding:2px 7px;border-radius:2px}
+.ok{color:#2E6B45}.alerte{color:#8A6A1C}.erreur{color:#A33}
+td .ok{background:#E6F0E9}td .alerte{background:#F6EBD4}td .erreur{background:#F6DEDE}
+
+/* ---------- divers ---------- */
+.bandeau{background:#8A2F2F;color:#fff;font-size:14.5px;font-weight:700}
+.bandeau .dedans{padding:13px 32px}
+ul.lim{margin:14px 0 0;list-style:none}
+ul.lim li{position:relative;padding-left:20px;margin-bottom:11px;max-width:84ch}
+ul.lim li::before{content:"";position:absolute;left:0;top:9px;width:8px;height:2px;background:var(--terra)}
+footer{max-width:var(--page);margin:56px auto 0;padding:22px 32px 0;border-top:1px solid var(--filet);
+       font-size:12.5px;line-height:1.65;color:var(--soft)}
+
+@media print{
+  nav{display:none}
+  body{background:#fff;padding:0}
+  header{padding:22px 0}
+  .carte,.cadre,.tuile{break-inside:avoid}
+}
+@media (max-width:620px){
+  header h1{font-size:26px}
+  header,nav .dedans,main,footer,.bandeau .dedans{padding-left:18px;padding-right:18px}
+  .tuile .n{font-size:34px}
+}
+</style></head><body><header><div class="dedans"><div class="oeil">Données ouvertes · Eurostat et Google Trends</div><h1>Quand la demande de voyage se cherche-t-elle&nbsp;?</h1><p>Le trafic passagers est publié une fois par an, avec près d'un an de retard. La recherche, elle, est visible tout de suite. Ce tableau de bord mesure le temps qui les sépare, marché par marché, pour savoir quand engager un budget d'acquisition.</p></div></header><nav><div class="dedans"><a href="index.html">Calendrier</a><a href="marches.html" class="on">Par marché</a><a href="qualite.html">Qualité et limites</a></div></nav><main><h2>Profils saisonniers, fenêtre 2015-2019</h2>
 <p class="intro">Les douze valeurs mensuelles moyennes de chaque série, ramenées à une moyenne de 1. Terracotta : la recherche dans le marché. Sombre : le trafic sur la route. Le point marque le pic de chaque courbe, et c'est l'écart entre ces deux points que mesure l'indicateur de tête. Passer par le profil moyen élimine la tendance, le bruit d'une année isolée et la reprise post-pandémie.</p>
 <div class="cartes">
 <div class="carte"><h3>Paris CDG vers New York JFK &nbsp;<span style="color:#9A543E">FR</span></h3><div class="meta">recherche en jan, trafic en août, <b>7 mois d'avance</b></div><svg viewBox="0 0 520 190" class="graphe" role="img" aria-label="profils saisonniers"><text x="10.0" y="182" font-size="9" fill="#6E625C" text-anchor="middle">j</text><text x="55.5" y="182" font-size="9" fill="#6E625C" text-anchor="middle">f</text><text x="100.9" y="182" font-size="9" fill="#6E625C" text-anchor="middle">m</text><text x="146.4" y="182" font-size="9" fill="#6E625C" text-anchor="middle">a</text><text x="191.8" y="182" font-size="9" fill="#6E625C" text-anchor="middle">m</text><text x="237.3" y="182" font-size="9" fill="#6E625C" text-anchor="middle">j</text><text x="282.7" y="182" font-size="9" fill="#6E625C" text-anchor="middle">j</text><text x="328.2" y="182" font-size="9" fill="#6E625C" text-anchor="middle">a</text><text x="373.6" y="182" font-size="9" fill="#6E625C" text-anchor="middle">s</text><text x="419.1" y="182" font-size="9" fill="#6E625C" text-anchor="middle">o</text><text x="464.5" y="182" font-size="9" fill="#6E625C" text-anchor="middle">n</text><text x="510.0" y="182" font-size="9" fill="#6E625C" text-anchor="middle">d</text><polyline fill="none" stroke="#222124" stroke-width="1.6" stroke-linejoin="round" points="10.0,135.0 55.5,164.0 100.9,113.3 146.4,53.5 191.8,36.7 237.3,45.0 282.7,22.7 328.2,16.0 373.6,47.0 419.1,39.3 464.5,102.4 510.0,90.5"/><circle cx="328.2" cy="16.0" r="3.4" fill="#222124"/><text x="328.2" y="30.0" font-size="10" font-weight="700" fill="#222124" text-anchor="middle">trafic</text><polyline fill="none" stroke="#9A543E" stroke-width="2.0" stroke-linejoin="round" points="10.0,16.0 55.5,47.3 100.9,59.0 146.4,78.7 191.8,120.1 237.3,164.0 282.7,110.0 328.2,55.4 373.6,67.1 419.1,59.0 464.5,82.2 510.0,77.1"/><circle cx="10.0" cy="16.0" r="3.4" fill="#9A543E"/><text x="36.0" y="8.0" font-size="10" font-weight="700" fill="#9A543E" text-anchor="middle">recherche</text></svg></div>
@@ -54,7 +131,7 @@ ul.lim{margin:6px 0 0 18px}ul.lim li{margin-bottom:5px;max-width:84ch}
 <div class="carte"><h3>Paris Orly vers Ajaccio &nbsp;<span style="color:#9A543E">FR</span></h3><div class="meta">recherche en août, trafic en août, <b>aucune avance</b></div><svg viewBox="0 0 520 190" class="graphe" role="img" aria-label="profils saisonniers"><text x="10.0" y="182" font-size="9" fill="#6E625C" text-anchor="middle">j</text><text x="55.5" y="182" font-size="9" fill="#6E625C" text-anchor="middle">f</text><text x="100.9" y="182" font-size="9" fill="#6E625C" text-anchor="middle">m</text><text x="146.4" y="182" font-size="9" fill="#6E625C" text-anchor="middle">a</text><text x="191.8" y="182" font-size="9" fill="#6E625C" text-anchor="middle">m</text><text x="237.3" y="182" font-size="9" fill="#6E625C" text-anchor="middle">j</text><text x="282.7" y="182" font-size="9" fill="#6E625C" text-anchor="middle">j</text><text x="328.2" y="182" font-size="9" fill="#6E625C" text-anchor="middle">a</text><text x="373.6" y="182" font-size="9" fill="#6E625C" text-anchor="middle">s</text><text x="419.1" y="182" font-size="9" fill="#6E625C" text-anchor="middle">o</text><text x="464.5" y="182" font-size="9" fill="#6E625C" text-anchor="middle">n</text><text x="510.0" y="182" font-size="9" fill="#6E625C" text-anchor="middle">d</text><polyline fill="none" stroke="#222124" stroke-width="1.6" stroke-linejoin="round" points="10.0,158.7 55.5,164.0 100.9,149.0 146.4,114.2 191.8,96.4 237.3,88.6 282.7,40.4 328.2,16.0 373.6,79.1 419.1,119.0 464.5,148.7 510.0,147.3"/><circle cx="328.2" cy="16.0" r="3.4" fill="#222124"/><text x="328.2" y="30.0" font-size="10" font-weight="700" fill="#222124" text-anchor="middle">trafic</text><polyline fill="none" stroke="#9A543E" stroke-width="2.0" stroke-linejoin="round" points="10.0,78.3 55.5,72.4 100.9,75.7 146.4,61.2 191.8,71.1 237.3,74.4 282.7,25.9 328.2,16.0 373.6,105.2 419.1,139.8 464.5,162.8 510.0,164.0"/><circle cx="328.2" cy="16.0" r="3.4" fill="#9A543E"/><text x="328.2" y="8.0" font-size="10" font-weight="700" fill="#9A543E" text-anchor="middle">recherche</text></svg></div>
 </div>
 <h2>Les trois mesures, côte à côte</h2><p class="intro">L'écart des pics est l'indicateur de tête, il se lit sans statistiques. L'écart des centres de gravité prend toute la masse de la saison et pas seulement son sommet : quand les deux se rejoignent, la mesure tient ; quand ils divergent, le profil est plat ou bimodal et la ligne est marquée peu fiable. La corrélation croisée est conservée bien qu'elle échoue ici, parce qu'une mesure qui ne marche pas se publie avec son défaut plutôt qu'elle ne se cache.</p>
-<table><tr><th>Route</th><th>Marché</th><th>Fenêtre</th><th>Pic recherche</th><th>Pic trafic</th><th>Écart des pics</th><th>Écart des centres</th><th>Concentration</th><th>Amplitude</th><th>Corrélation croisée</th><th>Fiable</th></tr>
+<div class="cadre"><table><tr><th>Route</th><th>Marché</th><th>Fenêtre</th><th>Pic recherche</th><th>Pic trafic</th><th>Écart des pics</th><th>Écart des centres</th><th>Concentration</th><th>Amplitude</th><th>Corrélation croisée</th><th>Fiable</th></tr>
 <tr><td>Paris CDG vers Rome</td><td>FR</td><td>2015-2019</td><td>fév</td><td>août</td><td class="num">6</td><td class="num">4.8</td><td class="num">0.768</td><td class="num">1.58</td><td class="num">0.457</td><td class="ok">oui</td></tr>
 <tr><td>Paris CDG vers Rome</td><td>FR</td><td>2022-2024</td><td>fév</td><td>juin</td><td class="num">4</td><td class="num">4.8</td><td class="num">0.858</td><td class="num">1.68</td><td class="num">0.488</td><td class="ok">oui</td></tr>
 <tr><td>Paris CDG vers Rome</td><td>IT</td><td>2015-2019</td><td>nov</td><td>août</td><td class="num">9</td><td class="num">8.9</td><td class="num">0.702</td><td class="num">1.59</td><td class="num">0.339</td><td class="ok">oui</td></tr>
@@ -73,4 +150,4 @@ ul.lim{margin:6px 0 0 18px}ul.lim li{margin-bottom:5px;max-width:84ch}
 <tr><td>Paris CDG vers New York JFK</td><td>US</td><td>2022-2024</td><td>juin</td><td>août</td><td class="num">2</td><td class="num">2.8</td><td class="num">0.475</td><td class="num">1.51</td><td class="num">0.565</td><td class="ok">oui</td></tr>
 <tr><td>Paris Orly vers Ajaccio</td><td>FR</td><td>2015-2019</td><td>août</td><td>août</td><td class="num">0</td><td class="num">1.0</td><td class="num">0.53</td><td class="num">2.14</td><td class="num">0.596</td><td class="ok">oui</td></tr>
 <tr><td>Paris Orly vers Ajaccio</td><td>FR</td><td>2022-2024</td><td>août</td><td>août</td><td class="num">0</td><td class="num">1.1</td><td class="num">0.531</td><td class="num">2.38</td><td class="num">0.585</td><td class="ok">oui</td></tr>
-</table></main><footer>Sources : Eurostat, série avia_par_fr, passagers transportés, mesure bidirectionnelle. Google Trends, indice relatif normalisé de 0 à 100 sur la période demandée. Données et code : dépôt du projet. Dernière génération : 2026-08-25.</footer></body></html>
+</table></div></main><footer><b>Sources.</b> Eurostat, série avia_par_fr, passagers transportés, mesure bidirectionnelle, publication annuelle. Google Trends, indice relatif normalisé de 0 à 100 sur la période demandée, export manuel daté.<br>Données brutes, code et méthode dans le dépôt du projet. Dernière génération&nbsp;: 2026-08-25.</footer></body></html>

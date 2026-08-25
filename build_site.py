@@ -186,73 +186,214 @@ def svg_courbes(serie_a, serie_b, mois, titre_a, titre_b, largeur=560, hauteur=1
 # Gabarit
 # --------------------------------------------------------------------------- #
 CSS = """
-:root{--terra:%s;--cream:%s;--ink:%s;--soft:%s}
+@font-face{font-family:Aileron;src:url("fonts/Aileron-Regular.otf") format("opentype");font-weight:400;font-display:swap}
+@font-face{font-family:Aileron;src:url("fonts/Aileron-Bold.otf") format("opentype");font-weight:700;font-display:swap}
+
+:root{
+  --terra:%s;--cream:%s;--ink:%s;--soft:%s;
+  --terra-fonce:#7E4231;--terra-clair:#D8B3A3;--terra-pale:#EFE0D7;
+  --action:#3F6B62;--action-clair:#B4CBC4;
+  --blanc:#FFFDFC;--filet:#E4D6CC;
+  --page:1120px;
+}
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--cream);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;padding-bottom:60px}
-header{background:var(--terra);color:#fff;padding:22px 28px}
-header h1{font-size:20px;font-weight:700;letter-spacing:.01em}
-header p{font-size:14px;opacity:.9;margin-top:4px;max-width:70ch}
-nav{background:#82442f;padding:0 28px}
-nav a{display:inline-block;color:#fff;padding:11px 16px 10px;text-decoration:none;font-size:14px;opacity:.75}
-nav a.on{opacity:1;box-shadow:inset 0 -3px 0 #fff}
-nav a:hover{opacity:1}
-main{padding:26px 28px;max-width:1180px}
-h2{font-size:17px;margin:30px 0 10px}
+html{-webkit-text-size-adjust:100%%}
+body{
+  background:var(--cream);color:var(--ink);
+  font:400 15.5px/1.6 Aileron,"Segoe UI",system-ui,sans-serif;
+  padding-bottom:72px;
+}
+
+/* ---------- en-tete ---------- */
+header{background:var(--terra);color:#fff;padding:40px 32px 34px}
+.dedans{max-width:var(--page);margin:0 auto}
+header .oeil{font-size:11.5px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;opacity:.72}
+header h1{font-size:33px;line-height:1.14;font-weight:700;letter-spacing:-.015em;margin:10px 0 12px;max-width:26ch}
+header p{font-size:15.5px;line-height:1.6;opacity:.93;max-width:66ch}
+
+/* ---------- navigation ---------- */
+nav{background:var(--terra-fonce);position:sticky;top:0;z-index:5}
+nav .dedans{display:flex;gap:2px;padding:0 32px}
+nav a{color:#fff;padding:14px 18px 12px;text-decoration:none;font-size:14.5px;opacity:.7;border-bottom:3px solid transparent}
+nav a:hover{opacity:1;background:rgba(255,255,255,.07)}
+nav a.on{opacity:1;border-bottom-color:#fff;font-weight:700}
+
+main{max-width:var(--page);margin:0 auto;padding:38px 32px 0}
+
+/* ---------- titres et texte ---------- */
+h2{font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--terra);
+   margin:52px 0 4px;padding-bottom:9px;border-bottom:2px solid var(--terra)}
 h2:first-child{margin-top:0}
-p.intro{max-width:78ch;margin-bottom:14px}
-table{border-collapse:collapse;width:100%%;font-size:13.5px;background:#fff}
-th,td{border:1px solid #e2d5cc;padding:6px 9px;text-align:left;vertical-align:top}
-th{background:#f6efe9;font-weight:700}
+h3{font-size:15px;font-weight:700;letter-spacing:-.005em}
+p.intro{max-width:76ch;margin:16px 0 20px;color:#3B3739}
+p.intro b{color:var(--ink)}
+
+/* ---------- bandeau de resultat ---------- */
+.hero{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin:22px 0 4px}
+.tuile{background:var(--blanc);border:1px solid var(--filet);border-radius:3px;padding:18px 20px 16px}
+.tuile .n{font-size:42px;line-height:1;font-weight:700;letter-spacing:-.03em;color:var(--terra)}
+.tuile .n small{font-size:17px;font-weight:700;letter-spacing:0;margin-left:3px}
+.tuile .q{font-size:13.5px;line-height:1.45;color:var(--soft);margin-top:9px}
+.tuile .q b{color:var(--ink);font-weight:700}
+.tuile.act .n{color:var(--action)}
+.phrase{background:var(--blanc);border-left:4px solid var(--terra);border-radius:0 3px 3px 0;
+        padding:16px 20px;margin:16px 0 0;font-size:16.5px;line-height:1.5;max-width:82ch}
+
+/* ---------- tableaux ---------- */
+.cadre{overflow-x:auto;border:1px solid var(--filet);border-radius:3px;background:var(--blanc);margin-top:18px}
+table{border-collapse:collapse;width:100%%;font-size:13.5px}
+th,td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--filet)}
+th{background:#F7F0EA;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+   color:var(--soft);white-space:nowrap}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:#FBF6F2}
 td.num{text-align:right;font-variant-numeric:tabular-nums}
-.cal td,.cal th{padding:0;text-align:center;font-size:11.5px}
-.cal th.mois{width:52px;font-weight:400;color:var(--soft)}
-.cal td.lib{text-align:left;padding:5px 9px;font-size:13px;white-space:nowrap}
-.cal td.c{height:22px}
-.haute{background:var(--terra);color:#fff;font-weight:700}
-.epaule{background:#d8b3a3}
-.basse{background:#fff}
-.pousse{background:#4f7d5e;color:#fff;font-weight:700}
-.pousse-e{background:#b6cbbc}
-.leg{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--soft);margin:8px 0 4px}
-.leg span{display:inline-flex;align-items:center;gap:6px}
-.leg i{width:13px;height:13px;display:inline-block;border:1px solid #e2d5cc}
-.cartes{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px}
-.carte{background:#fff;border:1px solid #e2d5cc;padding:12px 14px}
-.carte h3{font-size:14px;margin-bottom:2px}
-.carte .meta{font-size:12px;color:var(--soft);margin-bottom:6px}
+td b{font-weight:700}
+
+/* ---------- calendrier ---------- */
+.cal{border-collapse:separate;border-spacing:2px;font-size:11.5px}
+.cal th,.cal td{border:0;padding:0;text-align:center}
+.cal th.mois{font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+             color:var(--soft);background:none;padding-bottom:5px}
+.cal td.lib{width:268px;text-align:left;padding:6px 18px 6px 2px;font-size:13.5px;
+            white-space:nowrap;background:none;border-right:1px solid var(--filet)}
+.cal td.c{width:5.4%%}
+.cal tr.espace td{height:7px;background:none}
+.cal td.lib .m{color:var(--terra);font-weight:700}
+.cal td.lib .d{display:block;font-size:11.5px;color:var(--soft);font-weight:400;margin-top:1px}
+.cal td.c{height:23px;border-radius:2px}
+.haute{background:var(--terra)}
+.epaule{background:var(--terra-clair)}
+.basse{background:#EDE3DB}
+.pousse{background:var(--action)}
+.pousse-e{background:var(--action-clair)}
+.leg{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--soft);margin:18px 0 10px}
+.leg span{display:inline-flex;align-items:center;gap:7px}
+.leg i{width:14px;height:14px;border-radius:2px;display:inline-block}
+
+/* ---------- cartes ---------- */
+.cartes{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-top:18px}
+.carte{background:var(--blanc);border:1px solid var(--filet);border-radius:3px;padding:15px 17px 9px}
+.carte .meta{font-size:12.5px;color:var(--soft);margin:3px 0 10px;line-height:1.45}
+.carte .meta b{color:var(--ink)}
 .graphe{width:100%%;height:auto;display:block}
-.vide{font-size:12.5px;color:var(--soft);padding:24px 0}
-.drapeau{color:#9a6b1f;font-weight:700}
-.ok{color:#2e6b45}.alerte{color:#9a6b1f}.erreur{color:#a33}
-.bandeau{background:#8a2f2f;color:#fff;padding:11px 28px;font-size:14px;font-weight:700}
-footer{padding:20px 28px;font-size:12.5px;color:var(--soft);max-width:88ch}
-ul.lim{margin:6px 0 0 18px}ul.lim li{margin-bottom:5px;max-width:84ch}
+.vide{font-size:12.5px;color:var(--soft);padding:26px 0}
+.drapeau{color:#8A6A1C;font-weight:700}
+.pastille{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+          padding:2px 7px;border-radius:2px}
+.ok{color:#2E6B45}.alerte{color:#8A6A1C}.erreur{color:#A33}
+td .ok{background:#E6F0E9}td .alerte{background:#F6EBD4}td .erreur{background:#F6DEDE}
+
+/* ---------- divers ---------- */
+.bandeau{background:#8A2F2F;color:#fff;font-size:14.5px;font-weight:700}
+.bandeau .dedans{padding:13px 32px}
+ul.lim{margin:14px 0 0;list-style:none}
+ul.lim li{position:relative;padding-left:20px;margin-bottom:11px;max-width:84ch}
+ul.lim li::before{content:"";position:absolute;left:0;top:9px;width:8px;height:2px;background:var(--terra)}
+footer{max-width:var(--page);margin:56px auto 0;padding:22px 32px 0;border-top:1px solid var(--filet);
+       font-size:12.5px;line-height:1.65;color:var(--soft)}
+
+@media print{
+  nav{display:none}
+  body{background:#fff;padding:0}
+  header{padding:22px 0}
+  .carte,.cadre,.tuile{break-inside:avoid}
+}
+@media (max-width:620px){
+  header h1{font-size:26px}
+  header,nav .dedans,main,footer,.bandeau .dedans{padding-left:18px;padding-right:18px}
+  .tuile .n{font-size:34px}
+}
 """ % (TERRA, CREAM, INK, INK_SOFT)
+
+SOUS_TITRE = ("Le trafic passagers est publié une fois par an, avec près d'un an de "
+              "retard. La recherche, elle, est visible tout de suite. Ce tableau de bord "
+              "mesure le temps qui les sépare, marché par marché, pour savoir quand "
+              "engager un budget d'acquisition.")
 
 PAGES = [("index.html", "Calendrier"), ("marches.html", "Par marché"),
          ("qualite.html", "Qualité et limites")]
 
 
-def page(fichier, titre, sous_titre, corps, bandeau, maj):
+def page(fichier, titre, corps, bandeau, maj, phrase_cle):
     nav = "".join('<a href="%s"%s>%s</a>' % (f, ' class="on"' if f == fichier else "", t)
                   for f, t in PAGES)
-    alerte = '<div class="bandeau">%s</div>' % esc(bandeau) if bandeau else ""
+    alerte = ('<div class="bandeau"><div class="dedans">%s</div></div>' % esc(bandeau)
+              if bandeau else "")
+    favicon = ("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'>"
+               "<rect width='16' height='16' fill='%239A543E'/>"
+               "<path d='M2 11 L6 5 L9 9 L14 3' stroke='%23F4EDE7' stroke-width='1.7' fill='none'/></svg>")
     return (
         '<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width,initial-scale=1">'
+        '<meta name="description" content="%s">'
+        '<link rel="icon" href="%s">'
         '<title>%s</title><style>%s</style></head><body>'
-        '<header><h1>Quand la demande de voyage se cherche-t-elle&nbsp;?</h1>'
-        '<p>%s</p></header><nav>%s</nav>%s<main>%s</main>'
-        '<footer>Sources : Eurostat, série avia_par_fr, passagers transportés, '
-        'mesure bidirectionnelle. Google Trends, indice relatif normalisé de 0 à 100 '
-        'sur la période demandée. Données et code : dépôt du projet. '
-        'Dernière génération : %s.</footer></body></html>'
-        % (esc(titre), CSS, esc(sous_titre), nav, alerte, corps, maj))
+        '<header><div class="dedans">'
+        '<div class="oeil">Données ouvertes · Eurostat et Google Trends</div>'
+        '<h1>Quand la demande de voyage se cherche-t-elle&nbsp;?</h1>'
+        '<p>%s</p></div></header>'
+        '<nav><div class="dedans">%s</div></nav>%s'
+        '<main>%s</main>'
+        '<footer><b>Sources.</b> Eurostat, série avia_par_fr, passagers transportés, mesure '
+        'bidirectionnelle, publication annuelle. Google Trends, indice relatif normalisé de 0 à 100 '
+        'sur la période demandée, export manuel daté.<br>'
+        'Données brutes, code et méthode dans le dépôt du projet. '
+        'Dernière génération&nbsp;: %s.</footer></body></html>'
+        % (esc(phrase_cle), favicon, esc(titre), CSS, esc(SOUS_TITRE), nav, alerte, corps, maj))
 
 
 # --------------------------------------------------------------------------- #
 # Pages
 # --------------------------------------------------------------------------- #
+def contraste_marches(calib_idx):
+    """
+    Cherche la route ou deux marches divergent le plus dans leur avance, parmi
+    les mesures jugees fiables. C'est le resultat le plus parlant du projet :
+    une meme route, deux marches, deux calendriers budgetaires.
+    """
+    par_route = defaultdict(list)
+    for (route, marche, fen), r in calib_idx.items():
+        if fen == FENETRE_REF_PROFIL and r["fiable"] == "oui":
+            par_route[route].append((int(r["ecart_pics"]), marche, r))
+    meilleur = None
+    for route, lignes in par_route.items():
+        if len(lignes) < 2:
+            continue
+        lignes.sort()
+        ecart = lignes[-1][0] - lignes[0][0]
+        if meilleur is None or ecart > meilleur[0]:
+            meilleur = (ecart, route, lignes[0], lignes[-1])
+    return meilleur
+
+
+def bloc_resultat(routes_lib, calib_idx):
+    """Trois tuiles et une phrase, calculees et non ecrites a la main."""
+    total = len([1 for (_, _, f) in calib_idx if f == FENETRE_REF_PROFIL])
+    fiables = len([1 for (k, r) in calib_idx.items()
+                   if k[2] == FENETRE_REF_PROFIL and r["fiable"] == "oui"])
+    c = contraste_marches(calib_idx)
+    if not c:
+        return "", ""
+    _, route, bas, haut = c
+    lib = routes_lib.get(route, route)
+    phrase = ("Sur %s, le marché %s cherche %d mois avant le vol, le marché %s seulement %d."
+              % (lib, haut[1], haut[0], bas[1], bas[0]))
+    html = (
+        '<div class="hero">'
+        '<div class="tuile"><div class="n">%d<small> mois</small></div>'
+        '<div class="q">d\'avance du marché <b>%s</b><br>sur %s</div></div>'
+        '<div class="tuile act"><div class="n">%d<small> mois</small></div>'
+        '<div class="q">d\'avance du marché <b>%s</b><br>sur la même route</div></div>'
+        '<div class="tuile"><div class="n">%d</div>'
+        '<div class="q">couples route et marché suivis,<br>dont <b>%d mesures fiables</b></div></div>'
+        '</div>'
+        '<p class="phrase">%s Un calendrier budgétaire unique se trompe '
+        'forcément sur l\'un des deux.</p>'
+        % (haut[0], haut[1], esc(lib), bas[0], bas[1], total, fiables, esc(phrase)))
+    return html, phrase
+
+
 def texte_avance(d, fiable):
     if d == 0:
         t = "aucune avance"
@@ -269,8 +410,8 @@ def texte_avance(d, fiable):
     return t
 
 
-def page_calendrier(routes_lib, trafic, calib_idx, marches):
-    corps = ['<h2>Quand pousser le budget</h2>',
+def page_calendrier(routes_lib, trafic, calib_idx, marches, resultat):
+    corps = [resultat, '<h2>Quand pousser le budget</h2>',
              '<p class="intro">La ligne du haut est la saison de trafic réelle. '
              'La ligne du bas est la même saison reculée du décalage mesuré entre '
              'la recherche et le trafic : c\'est la période où la demande se cherche, '
@@ -280,7 +421,7 @@ def page_calendrier(routes_lib, trafic, calib_idx, marches):
              '<span><i class="epaule"></i> épaule</span>'
              '<span><i class="pousse"></i> à pousser</span>'
              '<span><i class="pousse-e"></i> à préparer</span></div>',
-             '<table class="cal"><tr><th></th>'
+             '<div class="cadre" style="border:0;background:none"><table class="cal"><tr><th></th>'
              + "".join('<th class="mois">%s</th>' % m for m in MOIS) + '</tr>']
 
     for m in marches:
@@ -302,8 +443,8 @@ def page_calendrier(routes_lib, trafic, calib_idx, marches):
             n = niveau(src)
             cells.append('<td class="c %s"></td>' % ("pousse" if n == "haute" else
                                                      "pousse-e" if n == "epaule" else "basse"))
-        corps.append("".join(cells) + '</tr>')
-    corps.append('</table>')
+        corps.append("".join(cells) + '</tr><tr class="espace"><td colspan="13"></td></tr>')
+    corps.append('</table></div>')
 
     corps.append('<h2>Comment lire</h2>'
                  '<p class="intro">L\'avance affichée est l\'écart entre le pic de '
@@ -358,7 +499,7 @@ def page_marches(routes_lib, profils, calib_idx, marches):
                  'la ligne est marquée peu fiable. La corrélation croisée est conservée '
                  'bien qu\'elle échoue ici, parce qu\'une mesure qui ne marche pas se '
                  'publie avec son défaut plutôt qu\'elle ne se cache.</p>')
-    corps.append('<table><tr><th>Route</th><th>Marché</th><th>Fenêtre</th>'
+    corps.append('<div class="cadre"><table><tr><th>Route</th><th>Marché</th><th>Fenêtre</th>'
                  '<th>Pic recherche</th><th>Pic trafic</th><th>Écart des pics</th>'
                  '<th>Écart des centres</th><th>Concentration</th><th>Amplitude</th>'
                  '<th>Corrélation croisée</th><th>Fiable</th></tr>')
@@ -371,7 +512,7 @@ def page_marches(routes_lib, profils, calib_idx, marches):
                         r["ecart_pics"], r["ecart_cg"], r["concentration_recherche"],
                         r["amplitude_recherche"], r["correlation_croisee"],
                         "ok" if r["fiable"] == "oui" else "alerte", r["fiable"]))
-    corps.append('</table>')
+    corps.append('</table></div>')
     return "\n".join(corps)
 
 
@@ -380,12 +521,12 @@ def page_qualite(qualite, adoption, trafic):
              '<p class="intro">Exécutés à chaque ingestion. Un contrôle en erreur fait '
              'échouer le traitement, donc la planification mensuelle : un échec est un '
              'signal, pas un silence.</p>',
-             '<table><tr><th>Contrôle</th><th>Statut</th><th>Détail</th><th>Vérifié le</th></tr>']
+             '<div class="cadre"><table><tr><th>Contrôle</th><th>Statut</th><th>Détail</th><th>Vérifié le</th></tr>']
     for q in qualite:
         corps.append('<tr><td>%s</td><td class="%s">%s</td><td>%s</td><td>%s</td></tr>'
                      % (esc(q["controle"]), q["statut"], esc(q["statut"]),
                         esc(q["detail"]), esc(q["verifie_le"])))
-    corps.append('</table>')
+    corps.append('</table></div>')
 
     if adoption:
         mois = sorted({r["mois"] for r in adoption})
@@ -468,19 +609,32 @@ def main():
                "les courbes ne sont pas réelles.") if synth else ""
 
     maj = date.today().isoformat()
+    resultat, phrase = bloc_resultat(routes_lib, calib_idx)
+    if not phrase:
+        phrase = SOUS_TITRE
     sous = ("Le trafic passagers paraît avec près d'un an de retard, la recherche est "
             "visible tout de suite. Ce tableau de bord mesure le temps qui les sépare, "
             "par marché, pour savoir quand engager un budget d'acquisition.")
 
     if not os.path.isdir(SITE):
         os.makedirs(SITE)
+    # les polices de la charte voyagent avec le site, aucune requete externe
+    polices = os.path.join(SITE, "fonts")
+    if not os.path.isdir(polices):
+        os.makedirs(polices)
+    for nom in ("Aileron-Regular.otf", "Aileron-Bold.otf"):
+        src = os.path.join(RACINE, "assets", "fonts", nom)
+        dst = os.path.join(polices, nom)
+        if os.path.exists(src) and not os.path.exists(dst):
+            with open(src, "rb") as f, open(dst, "wb") as g:
+                g.write(f.read())
     pages = {
-        "index.html": ("Calendrier", page_calendrier(routes_lib, trafic, calib_idx, marches)),
+        "index.html": ("Calendrier", page_calendrier(routes_lib, trafic, calib_idx, marches, resultat)),
         "marches.html": ("Par marché", page_marches(routes_lib, profils, calib_idx, marches)),
         "qualite.html": ("Qualité et limites", page_qualite(qualite, adoption, trafic)),
     }
     for fichier, (titre, corps) in pages.items():
-        html = page(fichier, "Demande aérienne, " + titre, sous, corps, bandeau, maj)
+        html = page(fichier, "Demande aérienne, " + titre, corps, bandeau, maj, phrase)
         with io.open(os.path.join(SITE, fichier), "w", encoding="utf-8") as f:
             f.write(html)
         print("  docs/%-14s %6d octets" % (fichier, len(html)))
