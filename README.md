@@ -127,4 +127,9 @@ Un traitement qui doit tourner seul chaque mois pendant des années ne doit pas
 pouvoir casser sur une montée de version de bibliothèque. Tout tient dans la
 bibliothèque standard, et le job d'intégration continue n'a rien à installer.
 
+Le site suit le même principe : le HTML et le SVG sont calculés à la génération,
+les définitions de colonnes passent par l'attribut `title`. Les pages sont donc
+complètes sans JavaScript, et une capture d'écran montre exactement ce que montre
+le navigateur.
+
 Mika Chue Waye · mika.chuewaye@gmail.com · mikachuewaye.com

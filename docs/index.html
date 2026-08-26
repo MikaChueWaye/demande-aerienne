@@ -40,6 +40,8 @@ h2:first-child{margin-top:0}
 h3{font-size:15px;font-weight:700;letter-spacing:-.005em}
 p.intro{max-width:76ch;margin:16px 0 20px;color:#3B3739}
 p.intro b{color:var(--ink)}
+p.intro a{color:var(--terra);text-decoration:none;border-bottom:1px solid var(--terra-clair)}
+p.intro a:hover{border-bottom-color:var(--terra)}
 
 /* ---------- bandeau de resultat ---------- */
 .hero{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin:22px 0 4px}
@@ -58,7 +60,14 @@ table{border-collapse:collapse;width:100%;font-size:13px}
 th,td{padding:7px 10px;text-align:left;border-bottom:1px solid var(--filet)}
 th{background:#F7F0EA;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
    color:var(--soft);line-height:1.3;vertical-align:bottom}
-th.court{width:64px}
+th.court{width:66px}
+th.chiffre{text-align:right}
+.cadre.serre{max-width:740px}
+th .unite{display:block;margin-top:2px;font-size:9.5px;font-weight:400;letter-spacing:0;
+          text-transform:none;color:#9C8B82}
+.def{border-bottom:1px dotted var(--terra-clair);cursor:help}
+p.intro .def,li .def{border-bottom-color:var(--terra)}
+.survol{display:block;margin-top:6px;font-size:12.5px;color:var(--soft)}
 td.num{white-space:nowrap}
 tbody tr:last-child td{border-bottom:0}
 tbody tr:hover{background:#FBF6F2}
@@ -70,8 +79,12 @@ td b{font-weight:700}
 .cal th,.cal td{border:0;padding:0;text-align:center}
 .cal th.mois{font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
              color:var(--soft);background:none;padding-bottom:5px}
-.cal td.lib{width:268px;text-align:left;padding:6px 18px 6px 2px;font-size:13.5px;
-            white-space:nowrap;background:none;border-right:1px solid var(--filet)}
+.cal td.lib{width:230px;text-align:left;padding:6px 14px 6px 2px;font-size:13.5px;
+            white-space:nowrap;background:none}
+.cal td.sub{width:152px;text-align:left;padding:0 14px 0 0;font-size:11.5px;line-height:1.25;
+            color:var(--soft);white-space:nowrap;background:none;
+            border-right:1px solid var(--filet)}
+.cal td.sub b{color:var(--ink);font-weight:700}
 .cal td.c{width:5.4%}
 .cal tr.espace td{height:7px;background:none}
 .cal td.lib .m{color:var(--terra);font-weight:700}
@@ -91,6 +104,13 @@ td b{font-weight:700}
 .carte{background:var(--blanc);border:1px solid var(--filet);border-radius:3px;padding:15px 17px 9px}
 .carte .meta{font-size:12.5px;color:var(--soft);margin:3px 0 10px;line-height:1.45}
 .carte .meta b{color:var(--ink)}
+.carte .meta .lr,.carte .meta .lt{font-weight:700}
+.carte .meta .lr{color:var(--terra)}
+.carte .meta .lt{color:var(--ink)}
+.carte .meta .lr::before,.carte .meta .lt::before{content:"";display:inline-block;
+          width:8px;height:8px;border-radius:1px;margin-right:5px}
+.carte .meta .lr::before{background:var(--terra)}
+.carte .meta .lt::before{background:var(--ink)}
 .graphe{width:100%;height:auto;display:block}
 .vide{font-size:12.5px;color:var(--soft);padding:26px 0}
 .drapeau{color:#8A6A1C;font-weight:700}
@@ -121,44 +141,44 @@ footer{max-width:var(--page);margin:56px auto 0;padding:22px 32px 0;border-top:1
 }
 </style></head><body><header><div class="dedans"><div class="oeil">Données ouvertes · Eurostat et Google Trends</div><h1>Quand la demande de voyage se cherche-t-elle&nbsp;?</h1><p>Le trafic passagers est publié une fois par an, avec près d'un an de retard. La recherche est visible tout de suite. Ce tableau de bord mesure le temps qui les sépare, marché par marché, pour savoir quand engager un budget d'acquisition.</p></div></header><nav><div class="dedans"><a href="index.html" class="on">Calendrier</a><a href="marches.html">Par marché</a><a href="qualite.html">Qualité et limites</a></div></nav><main><div class="hero"><div class="tuile"><div class="n">7<small> mois</small></div><div class="q">d'avance du marché <b>FR</b><br>sur Paris CDG vers New York JFK</div></div><div class="tuile act"><div class="n">2<small> mois</small></div><div class="q">d'avance du marché <b>US</b><br>sur la même route</div></div><div class="tuile"><div class="n">9</div><div class="q">couples route et marché suivis,<br>dont <b>7 mesures fiables</b></div></div></div><p class="phrase">Sur Paris CDG vers New York JFK, le marché FR cherche 7 mois avant le vol, le marché US 2 mois.</p>
 <h2>Quand pousser le budget</h2>
-<p class="intro">La ligne du haut est la saison de trafic réelle. La ligne du bas est la même saison reculée du décalage mesuré entre la recherche et le trafic : c'est la période où la demande se cherche, donc celle où le budget doit être engagé.</p>
+<p class="intro">Chaque destination occupe deux lignes. La première est la saison de trafic réelle. La seconde est la même saison reculée du décalage mesuré entre la recherche et le trafic : la période où la demande se cherche, donc celle où le budget doit être engagé.</p>
 <div class="leg"><span><i class="haute"></i> haute saison de trafic</span><span><i class="epaule"></i> moyenne saison</span><span><i class="basse"></i> basse saison</span><span><i class="pousse"></i> à pousser</span><span><i class="pousse-e"></i> à préparer</span></div>
-<div class="cadre" style="border:0;background:none"><table class="cal"><tr><th></th><th class="mois">jan</th><th class="mois">fév</th><th class="mois">mar</th><th class="mois">avr</th><th class="mois">mai</th><th class="mois">juin</th><th class="mois">juil</th><th class="mois">août</th><th class="mois">sep</th><th class="mois">oct</th><th class="mois">nov</th><th class="mois">déc</th></tr>
-<tr><td class="lib" rowspan="2">Paris CDG vers New York JFK &nbsp;<b>FR</b><br><span style="color:#6E625C;font-size:11.5px">7 mois d'avance</span></td>
+<div class="cadre" style="border:0;background:none"><table class="cal"><tr><th></th><th></th><th class="mois">jan</th><th class="mois">fév</th><th class="mois">mar</th><th class="mois">avr</th><th class="mois">mai</th><th class="mois">juin</th><th class="mois">juil</th><th class="mois">août</th><th class="mois">sep</th><th class="mois">oct</th><th class="mois">nov</th><th class="mois">déc</th></tr>
+<tr><td class="lib" rowspan="2">Paris CDG vers New York JFK &nbsp;<b>FR</b></td><td class="sub">saison de <b>trafic</b> réelle</td>
 <td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c epaule"></td><td class="c epaule"></td><td class="c haute"></td><td class="c haute"></td><td class="c haute"></td><td class="c haute"></td><td class="c haute"></td><td class="c basse"></td><td class="c epaule"></td>
-</tr><tr>
-<td class="c pousse"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c basse"></td><td class="c pousse-e"></td><td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c pousse-e"></td><td class="c pousse-e"></td><td class="c pousse"></td><td class="c pousse"></td></tr><tr class="espace"><td colspan="13"></td></tr>
-<tr><td class="lib" rowspan="2">Paris CDG vers New York JFK &nbsp;<b>US</b><br><span style="color:#6E625C;font-size:11.5px">2 mois d'avance</span></td>
+</tr><tr><td class="sub"><b>à pousser</b>, 7 mois plus tôt</td>
+<td class="c pousse"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c basse"></td><td class="c pousse-e"></td><td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c pousse-e"></td><td class="c pousse-e"></td><td class="c pousse"></td><td class="c pousse"></td></tr><tr class="espace"><td colspan="14"></td></tr>
+<tr><td class="lib" rowspan="2">Paris CDG vers New York JFK &nbsp;<b>US</b></td><td class="sub">saison de <b>trafic</b> réelle</td>
 <td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c epaule"></td><td class="c epaule"></td><td class="c haute"></td><td class="c haute"></td><td class="c haute"></td><td class="c haute"></td><td class="c haute"></td><td class="c basse"></td><td class="c epaule"></td>
-</tr><tr>
-<td class="c basse"></td><td class="c pousse-e"></td><td class="c pousse-e"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c basse"></td><td class="c pousse-e"></td><td class="c basse"></td><td class="c basse"></td></tr><tr class="espace"><td colspan="13"></td></tr>
-<tr><td class="lib" rowspan="2">Paris CDG vers São Paulo &nbsp;<b>FR</b><br><span style="color:#6E625C;font-size:11.5px">aucune avance</span></td>
+</tr><tr><td class="sub"><b>à pousser</b>, 2 mois plus tôt</td>
+<td class="c basse"></td><td class="c pousse-e"></td><td class="c pousse-e"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c basse"></td><td class="c pousse-e"></td><td class="c basse"></td><td class="c basse"></td></tr><tr class="espace"><td colspan="14"></td></tr>
+<tr><td class="lib" rowspan="2">Paris CDG vers São Paulo &nbsp;<b>FR</b></td><td class="sub">saison de <b>trafic</b> réelle</td>
 <td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c epaule"></td><td class="c epaule"></td><td class="c epaule"></td><td class="c epaule"></td><td class="c epaule"></td><td class="c epaule"></td><td class="c haute"></td><td class="c epaule"></td><td class="c epaule"></td>
-</tr><tr>
-<td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c pousse-e"></td><td class="c pousse-e"></td><td class="c pousse-e"></td><td class="c pousse-e"></td><td class="c pousse-e"></td><td class="c pousse-e"></td><td class="c pousse"></td><td class="c pousse-e"></td><td class="c pousse-e"></td></tr><tr class="espace"><td colspan="13"></td></tr>
-<tr><td class="lib" rowspan="2">Paris CDG vers São Paulo &nbsp;<b>BR</b><br><span style="color:#6E625C;font-size:11.5px">2 mois d'avance</span></td>
+</tr><tr><td class="sub"><b>à pousser</b>, même période</td>
+<td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c pousse-e"></td><td class="c pousse-e"></td><td class="c pousse-e"></td><td class="c pousse-e"></td><td class="c pousse-e"></td><td class="c pousse-e"></td><td class="c pousse"></td><td class="c pousse-e"></td><td class="c pousse-e"></td></tr><tr class="espace"><td colspan="14"></td></tr>
+<tr><td class="lib" rowspan="2">Paris CDG vers São Paulo &nbsp;<b>BR</b></td><td class="sub">saison de <b>trafic</b> réelle</td>
 <td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c epaule"></td><td class="c epaule"></td><td class="c epaule"></td><td class="c epaule"></td><td class="c epaule"></td><td class="c epaule"></td><td class="c haute"></td><td class="c epaule"></td><td class="c epaule"></td>
-</tr><tr>
-<td class="c basse"></td><td class="c pousse-e"></td><td class="c pousse-e"></td><td class="c pousse-e"></td><td class="c pousse-e"></td><td class="c pousse-e"></td><td class="c pousse-e"></td><td class="c pousse"></td><td class="c pousse-e"></td><td class="c pousse-e"></td><td class="c basse"></td><td class="c basse"></td></tr><tr class="espace"><td colspan="13"></td></tr>
-<tr><td class="lib" rowspan="2">Paris CDG vers Rome &nbsp;<b>FR</b><br><span style="color:#6E625C;font-size:11.5px">6 mois d'avance</span></td>
+</tr><tr><td class="sub"><b>à pousser</b>, 2 mois plus tôt</td>
+<td class="c basse"></td><td class="c pousse-e"></td><td class="c pousse-e"></td><td class="c pousse-e"></td><td class="c pousse-e"></td><td class="c pousse-e"></td><td class="c pousse-e"></td><td class="c pousse"></td><td class="c pousse-e"></td><td class="c pousse-e"></td><td class="c basse"></td><td class="c basse"></td></tr><tr class="espace"><td colspan="14"></td></tr>
+<tr><td class="lib" rowspan="2">Paris CDG vers Rome &nbsp;<b>FR</b></td><td class="sub">saison de <b>trafic</b> réelle</td>
 <td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c epaule"></td><td class="c haute"></td><td class="c haute"></td><td class="c haute"></td><td class="c haute"></td><td class="c haute"></td><td class="c haute"></td><td class="c basse"></td><td class="c basse"></td>
-</tr><tr>
-<td class="c pousse"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c pousse-e"></td><td class="c pousse"></td><td class="c pousse"></td></tr><tr class="espace"><td colspan="13"></td></tr>
-<tr><td class="lib" rowspan="2">Paris CDG vers Rome &nbsp;<b>IT</b><br><span style="color:#6E625C;font-size:11.5px">9 mois d'avance, ou deux saisons distinctes</span></td>
+</tr><tr><td class="sub"><b>à pousser</b>, 6 mois plus tôt</td>
+<td class="c pousse"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c pousse-e"></td><td class="c pousse"></td><td class="c pousse"></td></tr><tr class="espace"><td colspan="14"></td></tr>
+<tr><td class="lib" rowspan="2">Paris CDG vers Rome &nbsp;<b>IT</b></td><td class="sub">saison de <b>trafic</b> réelle</td>
 <td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c epaule"></td><td class="c haute"></td><td class="c haute"></td><td class="c haute"></td><td class="c haute"></td><td class="c haute"></td><td class="c haute"></td><td class="c basse"></td><td class="c basse"></td>
-</tr><tr>
-<td class="c pousse"></td><td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c pousse-e"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c pousse"></td></tr><tr class="espace"><td colspan="13"></td></tr>
-<tr><td class="lib" rowspan="2">Paris CDG vers Francfort &nbsp;<b>FR</b><br><span style="color:#6E625C;font-size:11.5px">10 mois d'avance, mesure peu fiable</span></td>
+</tr><tr><td class="sub"><b>à pousser</b>, 9 mois plus tôt,<br>ou deux saisons distinctes</td>
+<td class="c pousse"></td><td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c pousse-e"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c pousse"></td></tr><tr class="espace"><td colspan="14"></td></tr>
+<tr><td class="lib" rowspan="2">Paris CDG vers Francfort &nbsp;<b>FR</b></td><td class="sub">saison de <b>trafic</b> réelle</td>
 <td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c epaule"></td><td class="c haute"></td><td class="c haute"></td><td class="c haute"></td><td class="c epaule"></td><td class="c epaule"></td><td class="c haute"></td><td class="c epaule"></td><td class="c basse"></td>
-</tr><tr>
-<td class="c pousse-e"></td><td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c pousse-e"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c pousse-e"></td><td class="c pousse-e"></td><td class="c pousse"></td></tr><tr class="espace"><td colspan="13"></td></tr>
-<tr><td class="lib" rowspan="2">Paris CDG vers Francfort &nbsp;<b>DE</b><br><span style="color:#6E625C;font-size:11.5px">3 mois d'avance, mesure peu fiable</span></td>
+</tr><tr><td class="sub"><b>à pousser</b>, 10 mois plus tôt,<br>mesure peu fiable</td>
+<td class="c pousse-e"></td><td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c pousse-e"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c pousse-e"></td><td class="c pousse-e"></td><td class="c pousse"></td></tr><tr class="espace"><td colspan="14"></td></tr>
+<tr><td class="lib" rowspan="2">Paris CDG vers Francfort &nbsp;<b>DE</b></td><td class="sub">saison de <b>trafic</b> réelle</td>
 <td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c epaule"></td><td class="c haute"></td><td class="c haute"></td><td class="c haute"></td><td class="c epaule"></td><td class="c epaule"></td><td class="c haute"></td><td class="c epaule"></td><td class="c basse"></td>
-</tr><tr>
-<td class="c pousse-e"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c pousse-e"></td><td class="c pousse-e"></td><td class="c pousse"></td><td class="c pousse-e"></td><td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c basse"></td></tr><tr class="espace"><td colspan="13"></td></tr>
-<tr><td class="lib" rowspan="2">Paris Orly vers Ajaccio &nbsp;<b>FR</b><br><span style="color:#6E625C;font-size:11.5px">aucune avance</span></td>
+</tr><tr><td class="sub"><b>à pousser</b>, 3 mois plus tôt,<br>mesure peu fiable</td>
+<td class="c pousse-e"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c pousse-e"></td><td class="c pousse-e"></td><td class="c pousse"></td><td class="c pousse-e"></td><td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c basse"></td></tr><tr class="espace"><td colspan="14"></td></tr>
+<tr><td class="lib" rowspan="2">Paris Orly vers Ajaccio &nbsp;<b>FR</b></td><td class="sub">saison de <b>trafic</b> réelle</td>
 <td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c epaule"></td><td class="c haute"></td><td class="c haute"></td><td class="c haute"></td><td class="c haute"></td><td class="c haute"></td><td class="c basse"></td><td class="c basse"></td><td class="c basse"></td>
-</tr><tr>
-<td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c pousse-e"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c basse"></td><td class="c basse"></td><td class="c basse"></td></tr><tr class="espace"><td colspan="13"></td></tr>
+</tr><tr><td class="sub"><b>à pousser</b>, même période</td>
+<td class="c basse"></td><td class="c basse"></td><td class="c basse"></td><td class="c pousse-e"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c pousse"></td><td class="c basse"></td><td class="c basse"></td><td class="c basse"></td></tr><tr class="espace"><td colspan="14"></td></tr>
 </table></div>
 <h2>Comment lire</h2><p class="intro">L'avance affichée est l'écart entre le pic de recherche et le pic de trafic, mesuré sur le profil saisonnier moyen de <b>2015 à 2019</b>, la fenêtre propre : cinq années complètes, sans 2020 ni 2021 que la pandémie rend inexploitables. La saison de trafic dessinée dans la grille est calculée sur <b>2022 à 2024</b>, parce que c'est celle d'aujourd'hui, un mois étant dit en haute saison quand il dépasse de 10 % la moyenne annuelle, en moyenne saison entre 95 et 110 % de cette moyenne, ce que le métier appelle l'épaule.</p><p class="intro">Les lignes marquées peu fiables ont un profil trop plat ou trop irrégulier pour qu'un pic les résume. Elles restent affichées plutôt que retirées : un marché sans saison marquée n'a pas de fenêtre à pousser.</p></main><footer><b>Sources.</b> Eurostat, série avia_par_fr, passagers transportés, mesure bidirectionnelle, publication annuelle. Google Trends, indice relatif normalisé de 0 à 100 sur la période demandée, export manuel daté.<br>Données brutes, code et méthode dans le dépôt du projet. Dernière génération&nbsp;: 2026-08-25.</footer></body></html>

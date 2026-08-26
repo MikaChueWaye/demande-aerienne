@@ -53,14 +53,23 @@ courbes par couple route et marché, dimension `mois` de 1 à 12, deux métrique
 distinguées par la colonne `serie`, recherche et trafic. Filtres en haut : route,
 marché.
 
-Sous les graphiques, le tableau complet de `calibration` avec les trois mesures :
-écart des pics, écart des centres de gravité, corrélation croisée. Ce tableau est
-le même que celui du site.
+Échelle verticale à fixer manuellement, identique sur tous les graphiques :
+Looker cadre chaque graphique sur ses propres valeurs par défaut, ce qui donne la
+même ampleur visuelle à un profil plat et à un profil très saisonnier.
+
+Sous les graphiques, le tableau de `calibration` réduit à ce qui répond à la
+question : route, marché, fenêtre, pic de recherche, pic de trafic, écart des
+pics, fiabilité. Comme sur le site, les mesures de contrôle vont en page 3.
 
 ## Page 3, qualité et limites
 
 **Tableau** de `qualite` : contrôle, statut, détail, date de vérification, avec
 une couleur par statut.
+
+**Tableau de diagnostic** de `calibration` : écart des pics, écart des centres de
+gravité, concentration des deux séries, amplitude, corrélation croisée,
+fiabilité. Unité dans le nom de chaque champ, Looker n'a pas d'équivalent de
+l'infobulle de définition du site.
 
 **Graphiques** de `adoption_marches`, un par marché, pour le volet sur l'érosion
 de l'instrument.

@@ -173,6 +173,20 @@ rouge sur les trois pages du site.
 des années ne doit pas pouvoir casser sur une montée de version. Effet de bord
 utile : le job d'intégration continue n'a rien à installer.
 
+**Une seule échelle verticale pour tous les graphes.** Les profils saisonniers
+sont dessinés sur une échelle commune aux deux courbes et identique d'une carte à
+l'autre, avec un filet tous les 25 % autour de la moyenne annuelle. Normaliser
+chaque courbe sur son propre minimum et son propre maximum, ce qui était le
+premier choix, donnait la même ampleur visuelle à un profil d'amplitude 1,2 et à
+un profil d'amplitude 3,1 : le graphe contredisait alors le drapeau de fiabilité
+affiché à côté de lui.
+
+**Résultat et diagnostic séparés.** La page par marché ne porte que ce qui répond
+à la question « quand pousser » : les deux pics et l'écart entre eux. Les mesures
+qui servent à juger la fiabilité, écart des centres de gravité, concentration,
+amplitude, corrélation croisée, sont en page qualité. Chaque intitulé chiffré
+porte son unité sous le libellé et sa définition dans une infobulle.
+
 **Le brut est immuable.** Les réponses de l'API sont mises en cache et
 versionnées avec leur date. Toute erreur découverte plus tard se recalcule sur
 les mêmes entrées.

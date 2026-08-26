@@ -3,8 +3,9 @@
 """
 Genere le site statique a partir des CSV de data/out.
 
-Trois pages, aucune dependance, aucun script cote client : du HTML et du SVG
-calcules ici. Publiable tel quel sur GitHub Pages.
+Trois pages de HTML et de SVG calcules ici, sans dependance ni requete
+externe. Les pages sont completes et justes sans script : ce qui se lit a
+l'ecran se lit aussi a l'impression et sur une capture.
 
   docs/index.html    calendrier : quand pousser, par marche et par destination
   marches.html  les courbes, recherche contre trafic, par marche
@@ -15,6 +16,7 @@ calcules ici. Publiable tel quel sur GitHub Pages.
 
 import csv
 import io
+import math
 import os
 from collections import defaultdict
 from datetime import date
@@ -42,6 +44,60 @@ def lire(nom):
 
 def esc(t):
     return (str(t).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
+
+
+# Definition de chaque colonne chiffree, affichee au survol de son intitule.
+# Le tableau porte des nombres dont l'unite n'est pas devinable : elle est
+# ecrite sous l'intitule, et la definition complete tient dans l'infobulle.
+DEFS = {
+    "pic_recherche": "Mois le plus haut du profil saisonnier de recherche, "
+                     "sur la fenêtre indiquée.",
+    "pic_trafic": "Mois le plus haut du profil saisonnier de trafic de la route. "
+                  "Le trafic est commun à la route, il ne se ventile pas par marché.",
+    "ecart_pics": "Nombre de mois entre le pic de recherche et le pic de trafic. "
+                  "C'est l'indicateur de tête : l'avance avec laquelle la demande "
+                  "se cherche, donc le recul à appliquer au budget.",
+    "ecart_cg": "Distance en mois entre les deux centres de gravité de saison, "
+                "calculés sur le seul excédent au-dessus de la moyenne annuelle. "
+                "Sert de contrôle à l'écart des pics : les deux doivent concorder.",
+    "concentration": "Part de la saison ramassée autour d'un seul moment de "
+                     "l'année. 0 : étalée sur les douze mois. 1 : concentrée sur "
+                     "un seul mois. En dessous de 0,45, un pic ne résume plus la saison.",
+    "amplitude": "Mois le plus fort divisé par le mois le plus faible. 1,2 est un "
+                 "profil quasi plat, 2,4 un profil très saisonnier.",
+    "correlation": "Corrélation entre les deux séries mensuelles brutes, au meilleur "
+                   "décalage de 0 à 6 mois. Elle échoue sur les profils bimodaux et "
+                   "reste publiée avec son défaut.",
+    "fiable": "Oui quand les deux concentrations dépassent 0,45 et que l'écart des "
+              "pics et l'écart des centres ne divergent pas de plus de deux mois.",
+}
+
+SURVOL = ("Les intitulés soulignés en pointillé donnent leur définition au survol.")
+
+
+def dfn(libelle, cle, unite=None):
+    """Intitule de colonne : definition au survol, unite sous le libelle."""
+    u = '<span class="unite">%s</span>' % unite if unite else ""
+    return ('<span class="def" title="%s">%s</span>%s'
+            % (esc(DEFS[cle]), libelle, u))
+
+
+def num_fr(v, dec=None):
+    """
+    Separateur decimal francais, tiret quand la valeur manque.
+
+    dec impose le nombre de decimales : sans lui, une colonne melange 0,4 et
+    0,768 et les chiffres ne s'alignent plus verticalement.
+    """
+    t = "" if v is None else str(v).strip()
+    if not t:
+        return "–"
+    if dec is not None:
+        try:
+            t = "{:.{}f}".format(float(t), dec)
+        except ValueError:
+            pass
+    return t.replace(".", ",")
 
 
 # --------------------------------------------------------------------------- #
@@ -84,54 +140,112 @@ def serie_par(rows, cles, mois_key="mois", val_key="indice"):
 # --------------------------------------------------------------------------- #
 # SVG
 # --------------------------------------------------------------------------- #
-def svg_profil(pr, pt, largeur=520, hauteur=190):
+def bornes_communes(profils, fenetre):
     """
-    Les deux profils saisonniers sur douze mois, normalises chacun sur lui-meme.
-    Le pic de chaque courbe est marque : c'est l'ecart entre ces deux marques
-    que mesure l'indicateur de tete.
+    Minimum et maximum sur tous les profils affiches, arrondis au vingtieme.
+    Une echelle unique est la condition pour que les graphes soient comparables
+    entre eux : sans elle, un profil plat est dessine avec la meme ampleur
+    qu'un profil tres saisonnier, ce qui contredit la mesure publiee a cote.
     """
-    ml, mr, mt, mb = 10, 10, 16, 26
-    w, h = largeur - ml - mr, hauteur - mt - mb
+    vals = [x for cle, prof in profils.items()
+            if cle[2] == fenetre for x in prof.values()]
+    if not vals:
+        return (0.6, 1.6)
+    return (math.floor(min(vals) * 20) / 20.0, math.ceil(max(vals) * 20) / 20.0)
 
-    def pts(profil, couleur, epaisseur, marque, au_dessus):
+
+def svg_profil(pr, pt, bornes, largeur=340, hauteur=196):
+    """
+    Les deux profils saisonniers sur douze mois.
+
+    L'echelle verticale est commune aux deux courbes et identique d'une carte a
+    l'autre : un profil plat a donc l'air plat. Le filet pointille est la
+    moyenne annuelle de la serie, un filet clair par tranche de 25 % au-dessus et en
+    dessous : c'est ce repere qui donne son sens a l'axe vertical. Le pic de
+    chaque courbe est marque, et c'est l'ecart entre ces deux marques que mesure
+    l'indicateur de tete.
+    """
+    lo, hi = bornes
+    ml, mr, mt, mb = 46, 12, 16, 30
+    w, h = largeur - ml - mr, hauteur - mt - mb
+    ecart = (hi - lo) or 1.0
+
+    def y_de(v):
+        return mt + h - (v - lo) / ecart * h
+
+    def x_de(m):
+        return ml + w * (m - 1) / 11.0
+
+    # Un filet tous les 25 % de la moyenne, sur toute la hauteur de l'echelle
+    # commune. Les filets hauts restent utiles la ou aucune courbe ne monte :
+    # ils disent au lecteur que la place existe et que cette courbe ne l'occupe
+    # pas, au lieu de laisser une bande vide qui passe pour un defaut.
+    reperes = ""
+    k = int(math.ceil((lo - 1.0) / 0.25))
+    while 1.0 + k * 0.25 <= hi + 1e-9:
+        val = 1.0 + k * 0.25
+        k += 1
+        if val < lo - 1e-9:
+            continue
+        y = y_de(val)
+        moyenne = abs(val - 1.0) < 1e-9
+        style = ('stroke-width="1" stroke-dasharray="3 3" opacity="0.6"' if moyenne
+                 else 'stroke-width="0.7" opacity="0.24"')
+        lib = "moyenne" if moyenne else "%+d %%" % int(round((val - 1.0) * 100))
+        reperes += ('<line x1="%.1f" y1="%.1f" x2="%.1f" y2="%.1f" stroke="%s" %s/>'
+                    % (ml, y, ml + w, y, INK_SOFT, style))
+        reperes += ('<text x="%d" y="%.1f" font-size="9.5" fill="%s" '
+                    'text-anchor="end">%s</text>' % (ml - 7, y + 3.4, INK_SOFT, lib))
+
+    # axe des mois : un repere pour les douze, une etiquette un mois sur deux
+    axes = ""
+    for m in range(1, 13):
+        x = x_de(m)
+        axes += ('<line x1="%.1f" y1="%d" x2="%.1f" y2="%d" stroke="%s" '
+                 'stroke-width="0.8" opacity="0.4"/>' % (x, mt + h, x, mt + h + 3, INK_SOFT))
+        if m % 2:
+            axes += ('<text x="%.1f" y="%d" font-size="9.5" fill="%s" '
+                     'text-anchor="middle">%s</text>'
+                     % (x, mt + h + 17, INK_SOFT, MOIS[m - 1]))
+
+    def trace(profil, couleur, epaisseur, marque, au_dessus):
         if not profil:
             return ""
-        lo, hi = min(profil.values()), max(profil.values())
-        ecart = (hi - lo) or 1.0
-        coords = []
-        for m in range(1, 13):
-            x = ml + w * (m - 1) / 11.0
-            y = mt + h - (profil[m] - lo) / ecart * h
-            coords.append((x, y, m))
+        coords = [(x_de(m), y_de(profil[m])) for m in range(1, 13)]
         ligne = ('<polyline fill="none" stroke="%s" stroke-width="%s" '
                  'stroke-linejoin="round" points="%s"/>'
-                 % (couleur, epaisseur, " ".join("%.1f,%.1f" % (x, y) for x, y, _ in coords)))
+                 % (couleur, epaisseur, " ".join("%.1f,%.1f" % c for c in coords)))
         pic = max(profil, key=profil.get)
-        px, py, _ = coords[pic - 1]
+        px, py = coords[pic - 1]
         # l'etiquette est bornee pour ne pas sortir du cadre quand le pic tombe
         # en janvier ou en decembre, et l'une va au-dessus, l'autre en dessous,
         # sinon elles se superposent quand les deux pics coincident.
         tx = min(max(px, ml + 26), largeur - mr - 26)
-        ty = py - 8 if au_dessus else py + 14
+        ty = py - 8 if au_dessus else py + 15
         return ligne + ('<circle cx="%.1f" cy="%.1f" r="3.4" fill="%s"/>'
                         '<text x="%.1f" y="%.1f" font-size="10" font-weight="700" '
                         'fill="%s" text-anchor="middle">%s</text>'
                         % (px, py, couleur, tx, ty, couleur, marque))
 
-    axes = ""
-    for m in range(1, 13):
-        x = ml + w * (m - 1) / 11.0
-        axes += ('<text x="%.1f" y="%d" font-size="9" fill="%s" text-anchor="middle">%s</text>'
-                 % (x, hauteur - 8, INK_SOFT, MOIS[m - 1][0]))
     return ('<svg viewBox="0 0 %d %d" class="graphe" role="img" '
-            'aria-label="profils saisonniers">%s%s%s</svg>'
-            % (largeur, hauteur, axes, pts(pt, INK, 1.6, "trafic", False),
-               pts(pr, TERRA, 2.0, "recherche", True)))
+            'aria-label="profils saisonniers de la recherche et du trafic">'
+            '%s%s%s%s</svg>'
+            % (largeur, hauteur, reperes, axes,
+               trace(pt, INK, 1.6, "trafic", False),
+               trace(pr, TERRA, 2.0, "recherche", True)))
 
 
-def svg_courbes(serie_a, serie_b, mois, titre_a, titre_b, largeur=560, hauteur=170):
-    """Deux series normalisees chacune sur elle-meme : on compare des formes."""
-    ml, mr, mt, mb = 8, 8, 14, 22
+def svg_courbes(serie_a, serie_b, mois, titre_a, titre_b, largeur=340, hauteur=150,
+                bornes=None):
+    """
+    Deux series dans le temps.
+
+    Avec bornes, l'echelle verticale est fixe et affichee : c'est le cas de
+    l'indice Trends, qui va de 0 a 100 par construction. Sans bornes, chaque
+    serie est ramenee a son propre minimum et son propre maximum et seule la
+    forme se compare.
+    """
+    ml, mr, mt, mb = (34, 12, 12, 24) if bornes else (10, 10, 12, 24)
     w, h = largeur - ml - mr, hauteur - mt - mb
 
     def norm(s):
@@ -139,7 +253,7 @@ def svg_courbes(serie_a, serie_b, mois, titre_a, titre_b, largeur=560, hauteur=1
         connus = [v for v in vals if v is not None]
         if not connus:
             return []
-        lo, hi = min(connus), max(connus)
+        lo, hi = bornes if bornes else (min(connus), max(connus))
         ecart = (hi - lo) or 1.0
         return [None if v is None else (v - lo) / ecart for v in vals]
 
@@ -165,15 +279,31 @@ def svg_courbes(serie_a, serie_b, mois, titre_a, titre_b, largeur=560, hauteur=1
             'stroke-linejoin="round" points="%s"/>' % (couleur, epaisseur, " ".join(s))
             for s in pts)
 
-    # reperes d'annee
+    # echelle verticale, seulement quand elle a un sens affichable
     reperes = ""
+    if bornes:
+        lo, hi = bornes
+        for val in (hi, (lo + hi) / 2.0, lo):
+            y = mt + h - (val - lo) / ((hi - lo) or 1.0) * h
+            reperes += ('<line x1="%.1f" y1="%.1f" x2="%.1f" y2="%.1f" stroke="%s" '
+                        'stroke-width="0.7" opacity="0.24"/>' % (ml, y, ml + w, y, INK_SOFT))
+            reperes += ('<text x="%d" y="%.1f" font-size="9.5" fill="%s" '
+                        'text-anchor="end">%s</text>'
+                        % (ml - 7, y + 3.4, INK_SOFT, ("%g" % val)))
+
+    # reperes d'annee : un filet par annee, une etiquette une annee sur deux,
+    # sinon les libelles se touchent quand la carte tient dans une colonne
+    annees = 0
     for i, m in enumerate(mois):
         if m.endswith("-01"):
             x = ml + (w * i / max(1, len(mois) - 1))
             reperes += ('<line x1="%.1f" y1="%d" x2="%.1f" y2="%d" stroke="%s" '
-                        'stroke-width="0.5" opacity="0.35"/>' % (x, mt, x, mt + h, INK_SOFT))
-            reperes += ('<text x="%.1f" y="%d" font-size="9" fill="%s" '
-                        'text-anchor="middle">%s</text>' % (x, hauteur - 6, INK_SOFT, m[:4]))
+                        'stroke-width="0.5" opacity="0.3"/>' % (x, mt, x, mt + h, INK_SOFT))
+            if annees %2 == 0:
+                reperes += ('<text x="%.1f" y="%d" font-size="9.5" fill="%s" '
+                            'text-anchor="middle">%s</text>'
+                            % (x, hauteur - 7, INK_SOFT, m[:4]))
+            annees += 1
 
     return (
         '<svg viewBox="0 0 %d %d" class="graphe" role="img" aria-label="%s et %s">'
@@ -227,6 +357,8 @@ h2:first-child{margin-top:0}
 h3{font-size:15px;font-weight:700;letter-spacing:-.005em}
 p.intro{max-width:76ch;margin:16px 0 20px;color:#3B3739}
 p.intro b{color:var(--ink)}
+p.intro a{color:var(--terra);text-decoration:none;border-bottom:1px solid var(--terra-clair)}
+p.intro a:hover{border-bottom-color:var(--terra)}
 
 /* ---------- bandeau de resultat ---------- */
 .hero{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin:22px 0 4px}
@@ -245,7 +377,14 @@ table{border-collapse:collapse;width:100%%;font-size:13px}
 th,td{padding:7px 10px;text-align:left;border-bottom:1px solid var(--filet)}
 th{background:#F7F0EA;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
    color:var(--soft);line-height:1.3;vertical-align:bottom}
-th.court{width:64px}
+th.court{width:66px}
+th.chiffre{text-align:right}
+.cadre.serre{max-width:740px}
+th .unite{display:block;margin-top:2px;font-size:9.5px;font-weight:400;letter-spacing:0;
+          text-transform:none;color:#9C8B82}
+.def{border-bottom:1px dotted var(--terra-clair);cursor:help}
+p.intro .def,li .def{border-bottom-color:var(--terra)}
+.survol{display:block;margin-top:6px;font-size:12.5px;color:var(--soft)}
 td.num{white-space:nowrap}
 tbody tr:last-child td{border-bottom:0}
 tbody tr:hover{background:#FBF6F2}
@@ -257,8 +396,12 @@ td b{font-weight:700}
 .cal th,.cal td{border:0;padding:0;text-align:center}
 .cal th.mois{font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
              color:var(--soft);background:none;padding-bottom:5px}
-.cal td.lib{width:268px;text-align:left;padding:6px 18px 6px 2px;font-size:13.5px;
-            white-space:nowrap;background:none;border-right:1px solid var(--filet)}
+.cal td.lib{width:230px;text-align:left;padding:6px 14px 6px 2px;font-size:13.5px;
+            white-space:nowrap;background:none}
+.cal td.sub{width:152px;text-align:left;padding:0 14px 0 0;font-size:11.5px;line-height:1.25;
+            color:var(--soft);white-space:nowrap;background:none;
+            border-right:1px solid var(--filet)}
+.cal td.sub b{color:var(--ink);font-weight:700}
 .cal td.c{width:5.4%%}
 .cal tr.espace td{height:7px;background:none}
 .cal td.lib .m{color:var(--terra);font-weight:700}
@@ -278,6 +421,13 @@ td b{font-weight:700}
 .carte{background:var(--blanc);border:1px solid var(--filet);border-radius:3px;padding:15px 17px 9px}
 .carte .meta{font-size:12.5px;color:var(--soft);margin:3px 0 10px;line-height:1.45}
 .carte .meta b{color:var(--ink)}
+.carte .meta .lr,.carte .meta .lt{font-weight:700}
+.carte .meta .lr{color:var(--terra)}
+.carte .meta .lt{color:var(--ink)}
+.carte .meta .lr::before,.carte .meta .lt::before{content:"";display:inline-block;
+          width:8px;height:8px;border-radius:1px;margin-right:5px}
+.carte .meta .lr::before{background:var(--terra)}
+.carte .meta .lt::before{background:var(--ink)}
 .graphe{width:100%%;height:auto;display:block}
 .vide{font-size:12.5px;color:var(--soft);padding:26px 0}
 .drapeau{color:#8A6A1C;font-weight:700}
@@ -395,35 +545,38 @@ def bloc_resultat(routes_lib, calib_idx):
     return html, phrase
 
 
-def texte_avance(d, fiable):
+def texte_pousse(d, fiable):
+    """
+    Libelle de la seconde ligne de chaque paire : ce qu'elle montre et de
+    combien elle recule la premiere. Sans lui, les deux lignes ne se
+    distinguent que par la couleur et par la phrase d'introduction.
+    """
     if d == 0:
-        t = "aucune avance"
+        t = "<b>à pousser</b>, même période"
     elif d == 1:
-        t = "1 mois d'avance"
+        t = "<b>à pousser</b>, 1 mois plus tôt"
     else:
-        t = "%d mois d'avance" % d
+        t = "<b>à pousser</b>, %d mois plus tôt" % d
     if not fiable:
-        return t + ", mesure peu fiable"
-    # Sur un cycle annuel, une avance de 8 mois ou plus se lit plus honnetement
-    # comme deux saisons differentes que comme une longue anticipation.
+        return t + ",<br>mesure peu fiable"
     if d >= 8:
-        return t + ", ou deux saisons distinctes"
+        return t + ",<br>ou deux saisons distinctes"
     return t
 
 
 def page_calendrier(routes_lib, trafic, calib_idx, marches, resultat):
     corps = [resultat, '<h2>Quand pousser le budget</h2>',
-             '<p class="intro">La ligne du haut est la saison de trafic réelle. '
-             'La ligne du bas est la même saison reculée du décalage mesuré entre '
-             'la recherche et le trafic : c\'est la période où la demande se cherche, '
-             'donc celle où le budget doit être engagé.</p>',
+             '<p class="intro">Chaque destination occupe deux lignes. La première est '
+             'la saison de trafic réelle. La seconde est la même saison reculée du '
+             'décalage mesuré entre la recherche et le trafic : la période où la demande '
+             'se cherche, donc celle où le budget doit être engagé.</p>',
              '<div class="leg">'
              '<span><i class="haute"></i> haute saison de trafic</span>'
              '<span><i class="epaule"></i> moyenne saison</span>'
              '<span><i class="basse"></i> basse saison</span>'
              '<span><i class="pousse"></i> à pousser</span>'
              '<span><i class="pousse-e"></i> à préparer</span></div>',
-             '<div class="cadre" style="border:0;background:none"><table class="cal"><tr><th></th>'
+             '<div class="cadre" style="border:0;background:none"><table class="cal"><tr><th></th><th></th>'
              + "".join('<th class="mois">%s</th>' % m for m in MOIS) + '</tr>']
 
     for m in marches:
@@ -435,17 +588,17 @@ def page_calendrier(routes_lib, trafic, calib_idx, marches, resultat):
         d = int(info["ecart_pics"] or 0) if info else 0
         fiable = (info["fiable"] == "oui") if info else False
         lib = "%s &nbsp;<b>%s</b>" % (esc(routes_lib.get(m["route"], m["route"])), esc(m["marche"]))
-        corps.append('<tr><td class="lib" rowspan="2">%s<br><span style="color:%s;font-size:11.5px">'
-                     '%s</span></td>' % (lib, INK_SOFT, texte_avance(d, fiable)))
+        corps.append('<tr><td class="lib" rowspan="2">%s</td>'
+                     '<td class="sub">saison de <b>trafic</b> réelle</td>' % lib)
         corps.append("".join('<td class="c %s"></td>' % niveau(prof.get(i + 1, 0)) for i in range(12)))
-        corps.append('</tr><tr>')
+        corps.append('</tr><tr><td class="sub">%s</td>' % texte_pousse(d, fiable))
         cells = []
         for i in range(12):
             src = prof.get(decale(i + 1, -d), 0)
             n = niveau(src)
             cells.append('<td class="c %s"></td>' % ("pousse" if n == "haute" else
                                                      "pousse-e" if n == "epaule" else "basse"))
-        corps.append("".join(cells) + '</tr><tr class="espace"><td colspan="13"></td></tr>')
+        corps.append("".join(cells) + '</tr><tr class="espace"><td colspan="14"></td></tr>')
     corps.append('</table></div>')
 
     corps.append('<h2>Comment lire</h2>'
@@ -464,14 +617,16 @@ def page_calendrier(routes_lib, trafic, calib_idx, marches, resultat):
     return "\n".join(corps)
 
 
-def page_marches(routes_lib, profils, calib_idx, marches):
+def page_marches(routes_lib, profils, calib_idx, marches, bornes):
     corps = ['<h2>Profils saisonniers, fenêtre 2015-2019</h2>',
              '<p class="intro">Les douze valeurs mensuelles moyennes de chaque série, '
-             'ramenées à une moyenne de 1. Terracotta : la recherche dans le marché. '
-             'Sombre : le trafic sur la route. Le point marque le pic de chaque courbe, '
-             'et c\'est l\'écart entre ces deux points que mesure l\'indicateur de tête. '
-             'Passer par le profil moyen élimine la tendance, le bruit d\'une année '
-             'isolée et la reprise post-pandémie.</p>', '<div class="cartes">']
+             'ramenées à une moyenne de 1. <b>L\'échelle verticale est la même sur les '
+             'deux courbes et sur toutes les cartes</b>, donc un profil qui a l\'air plat '
+             'l\'est. Le filet pointillé marque la moyenne annuelle de la série, un filet '
+             'clair par tranche de 25 %, au-dessus comme en dessous. Le point marque le pic de chaque '
+             'courbe, et l\'écart entre ces deux points est l\'avance mesurée. Passer par '
+             'le profil moyen élimine la tendance, le bruit d\'une année isolée et la '
+             'reprise post-pandémie.</p>', '<div class="cartes">']
     for m in marches:
         info = calib_idx.get((m["route"], m["marche"], FENETRE_REF_PROFIL))
         pr = profils.get((m["route"], m["marche"], FENETRE_REF_PROFIL, "recherche"))
@@ -480,45 +635,48 @@ def page_marches(routes_lib, profils, calib_idx, marches):
             continue
         if info:
             av = int(info["ecart_pics"])
-            meta = ("recherche en %s, trafic en %s, <b>%s</b>"
+            meta = ('<span class="lr">recherche</span> en %s, '
+                    '<span class="lt">trafic</span> en %s, <b>%s</b>'
                     % (MOIS[int(info["pic_recherche"]) - 1], MOIS[int(info["pic_trafic"]) - 1],
-                       "aucune avance" if av == 0 else "%d mois d\'avance" % av))
+                       "aucune&nbsp;avance" if av == 0
+                       else "%d&nbsp;mois&nbsp;d\'avance" % av))
             if info["fiable"] != "oui":
-                meta += ' <span class="drapeau">mesure peu fiable</span>'
+                meta += ' <span class="drapeau">mesure&nbsp;peu&nbsp;fiable</span>'
         else:
             meta = "terme : %s" % m["terme"]
         corps.append('<div class="carte"><h3>%s &nbsp;<span style="color:%s">%s</span></h3>'
                      '<div class="meta">%s</div>%s</div>'
                      % (esc(routes_lib.get(m["route"], m["route"])), TERRA, esc(m["marche"]),
-                        meta, svg_profil(pr, pt)))
+                        meta, svg_profil(pr, pt, bornes)))
     corps.append('</div>')
 
-    corps.append('<h2>Les trois mesures, côte à côte</h2>'
-                 '<p class="intro">L\'écart des pics est l\'indicateur de tête. '
-                 'L\'écart des centres de gravité prend toute la masse '
-                 'de la saison et pas seulement son sommet : quand les deux se rejoignent, '
-                 'la mesure tient ; quand ils divergent, le profil est plat ou bimodal et '
-                 'la ligne est marquée peu fiable. La corrélation croisée est conservée pour '
-                 'transparence, bien qu\'elle échoue sur les profils bimodaux.</p>')
-    corps.append('<div class="cadre"><table><tr><th>Route</th><th>Marché</th><th>Fenêtre</th>'
-                 '<th class="court">Pic<br>recherche</th><th class="court">Pic<br>trafic</th>'
-                 '<th class="court">Écart<br>des pics</th><th class="court">Écart<br>des centres</th>'
-                 '<th class="court">Concentration</th><th class="court">Amplitude</th>'
-                 '<th class="court">Corrélation<br>croisée</th><th class="court">Fiable</th></tr>')
+    corps.append('<h2>Toutes les avances mesurées</h2>'
+                 '<p class="intro">Lecture d\'une ligne : dans ce marché, la recherche '
+                 'culmine au mois indiqué, le trafic de la route au sien, et l\'écart '
+                 'entre les deux est l\'avance en mois. Les quatre mesures de contrôle '
+                 'qui servent à juger la fiabilité sont en page '
+                 '<a href="qualite.html">Qualité et limites</a>.'
+                 '<span class="survol">%s</span></p>' % SURVOL)
+    corps.append('<div class="cadre serre"><table><tr><th>Route</th><th>Marché</th>'
+                 '<th>Fenêtre</th><th class="court">%s</th><th class="court">%s</th>'
+                 '<th class="court chiffre">%s</th><th class="court">%s</th></tr>'
+                 % (dfn("Pic<br>recherche", "pic_recherche"),
+                    dfn("Pic<br>trafic", "pic_trafic"),
+                    dfn("Écart<br>des pics", "ecart_pics", "mois"),
+                    dfn("Mesure<br>fiable", "fiable", "oui / non")))
     for (route, marche, fen), r in sorted(calib_idx.items()):
-        corps.append('<tr><td title="%s"><b>%s</b></td><td>%s</td><td>%s</td><td>%s</td><td>%s</td>'
-                     '<td class="num">%s</td><td class="num">%s</td><td class="num">%s</td>'
-                     '<td class="num">%s</td><td class="num">%s</td><td class="%s">%s</td></tr>'
-                     % (esc(routes_lib.get(route, route)), esc(route), esc(marche), esc(fen),
+        corps.append('<tr><td title="%s"><b>%s</b></td><td>%s</td><td>%s</td>'
+                     '<td>%s</td><td>%s</td><td class="num"><b>%s</b></td>'
+                     '<td class="%s">%s</td></tr>'
+                     % (esc(route), esc(routes_lib.get(route, route)), esc(marche), esc(fen),
                         MOIS[int(r["pic_recherche"]) - 1], MOIS[int(r["pic_trafic"]) - 1],
-                        r["ecart_pics"], r["ecart_cg"], r["concentration_recherche"],
-                        r["amplitude_recherche"], r["correlation_croisee"],
+                        num_fr(r["ecart_pics"]),
                         "ok" if r["fiable"] == "oui" else "alerte", r["fiable"]))
     corps.append('</table></div>')
     return "\n".join(corps)
 
 
-def page_qualite(qualite, adoption, trafic):
+def page_qualite(qualite, adoption, trafic, routes_lib, calib_idx):
     corps = ['<h2>Contrôles automatiques</h2>',
              '<p class="intro">Exécutés à chaque ingestion. Un contrôle en erreur fait '
              'échouer le traitement, donc la planification mensuelle.</p>',
@@ -527,6 +685,40 @@ def page_qualite(qualite, adoption, trafic):
         corps.append('<tr><td>%s</td><td class="%s">%s</td><td>%s</td><td>%s</td></tr>'
                      % (esc(q["controle"]), q["statut"], esc(q["statut"]),
                         esc(q["detail"]), esc(q["verifie_le"])))
+    corps.append('</table></div>')
+
+    corps.append('<h2>Diagnostic de fiabilité</h2>')
+    corps.append('<p class="intro">L\'écart des pics est l\'indicateur publié. '
+                 'L\'écart des centres de gravité sert de contrôle : il prend toute la '
+                 'masse de la saison et pas seulement son sommet. Quand les deux '
+                 'concordent, la mesure tient. Quand ils divergent de plus de deux mois, '
+                 'ou quand la saison est trop étalée pour qu\'un pic la résume, la ligne '
+                 'est marquée peu fiable et elle reste affichée.'
+                 '<span class="survol">%s</span></p>' % SURVOL)
+    corps.append('<div class="cadre"><table><tr><th>Route</th><th>Marché</th><th>Fenêtre</th>'
+                 '<th class="court chiffre">%s</th><th class="court chiffre">%s</th>'
+                 '<th class="court chiffre">%s</th><th class="court chiffre">%s</th>'
+                 '<th class="court chiffre">%s</th><th class="court chiffre">%s</th>'
+                 '<th class="court">%s</th></tr>'
+                 % (dfn("Écart<br>des pics", "ecart_pics", "mois"),
+                    dfn("Écart des<br>centres", "ecart_cg", "mois"),
+                    dfn("Concentration<br>recherche", "concentration", "0 à 1"),
+                    dfn("Concentration<br>trafic", "concentration", "0 à 1"),
+                    dfn("Amplitude<br>recherche", "amplitude", "max / min"),
+                    dfn("Corrélation<br>croisée", "correlation", "-1 à 1"),
+                    dfn("Mesure<br>fiable", "fiable", "oui / non")))
+    for (route, marche, fen), r in sorted(calib_idx.items()):
+        corps.append('<tr><td title="%s"><b>%s</b></td><td>%s</td><td>%s</td>'
+                     '<td class="num">%s</td><td class="num">%s</td><td class="num">%s</td>'
+                     '<td class="num">%s</td><td class="num">%s</td><td class="num">%s</td>'
+                     '<td class="%s">%s</td></tr>'
+                     % (esc(route), esc(routes_lib.get(route, route)), esc(marche), esc(fen),
+                        num_fr(r["ecart_pics"]), num_fr(r["ecart_cg"], 1),
+                        num_fr(r["concentration_recherche"], 2),
+                        num_fr(r["concentration_trafic"], 2),
+                        num_fr(r["amplitude_recherche"], 2),
+                        num_fr(r["correlation_croisee"], 2),
+                        "ok" if r["fiable"] == "oui" else "alerte", r["fiable"]))
     corps.append('</table></div>')
 
     if adoption:
@@ -539,12 +731,15 @@ def page_qualite(qualite, adoption, trafic):
                      'ci-dessous est un proxy '
                      '<b>faible</b> : chercher un assistant mesure l\'intérêt pour '
                      'l\'outil, pas son usage pour préparer un voyage. Il sert à comparer '
-                     'des marchés entre eux, pas à quantifier une perte.</p>')
+                     'des marchés entre eux, pas à quantifier une perte. Chaque '
+                     'courbe est graduée de 0 à 100, le maximum de la série valant '
+                     '100 : deux marchés ne se comparent donc pas en niveau.</p>')
         corps.append('<div class="cartes">')
         for (marche,), s in sorted(par_marche.items()):
             corps.append('<div class="carte"><h3>%s</h3><div class="meta">'
                          'intérêt de recherche pour les assistants</div>%s</div>'
-                         % (esc(marche), svg_courbes(s, {}, mois, "adoption", "")))
+                         % (esc(marche), svg_courbes(s, {}, mois, "adoption", "",
+                                                     bornes=(0, 100))))
         corps.append('</div>')
 
     corps.append('<h2>Ce que cette donnée ne permet pas de dire</h2><ul class="lim">')
@@ -609,6 +804,7 @@ def main():
     bandeau = ("Données de recherche SYNTHÉTIQUES : ce site est une maquette, "
                "les courbes ne sont pas réelles.") if synth else ""
 
+    bornes = bornes_communes(profils, FENETRE_REF_PROFIL)
     maj = date.today().isoformat()
     resultat, phrase = bloc_resultat(routes_lib, calib_idx)
     if not phrase:
@@ -631,8 +827,8 @@ def main():
                 g.write(f.read())
     pages = {
         "index.html": ("Calendrier", page_calendrier(routes_lib, trafic, calib_idx, marches, resultat)),
-        "marches.html": ("Par marché", page_marches(routes_lib, profils, calib_idx, marches)),
-        "qualite.html": ("Qualité et limites", page_qualite(qualite, adoption, trafic)),
+        "marches.html": ("Par marché", page_marches(routes_lib, profils, calib_idx, marches, bornes)),
+        "qualite.html": ("Qualité et limites", page_qualite(qualite, adoption, trafic, routes_lib, calib_idx)),
     }
     for fichier, (titre, corps) in pages.items():
         html = page(fichier, "Demande aérienne, " + titre, corps, bandeau, maj, phrase)
