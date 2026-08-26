@@ -132,4 +132,12 @@ les définitions de colonnes passent par l'attribut `title`. Les pages sont donc
 complètes sans JavaScript, et une capture d'écran montre exactement ce que montre
 le navigateur.
 
+## Remerciements
+
+Merci à Julien Leclerc pour ses précisions sur les pratiques de l'acquisition
+payante dans le transport aérien. C'est à lui que ce projet doit d'être modélisé
+par marché et non par route, qui en est la décision de conception la plus
+structurante : le trafic reste commun à la liaison, seule la recherche se
+ventile, et c'est de là que vient tout le reste.
+
 Mika Chue Waye · mika.chuewaye@gmail.com · mikachuewaye.com

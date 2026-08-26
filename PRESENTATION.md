@@ -244,3 +244,11 @@ docs/                       le site
 python ingest.py
 python build_site.py
 ```
+
+## Remerciements
+
+Merci à Julien Leclerc pour ses précisions sur les pratiques de l'acquisition
+payante dans le transport aérien. Le grain route × marché, qui est le choix de
+modélisation dont dépendent tous les autres, vient de son éclairage : sans lui
+le projet aurait mesuré une avance moyenne par liaison, c'est-à-dire une valeur
+qui n'existe pour personne.

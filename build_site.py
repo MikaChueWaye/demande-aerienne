@@ -490,6 +490,8 @@ def page(fichier, titre, corps, bandeau, maj, phrase_cle):
         '<footer><b>Sources.</b> Eurostat, série avia_par_fr, passagers transportés, mesure '
         'bidirectionnelle, publication annuelle. Google Trends, indice relatif normalisé de 0 à 100 '
         'sur la période demandée, export manuel daté.<br>'
+        '<b>Remerciements.</b> Julien Leclerc, pour ses précisions sur les pratiques de '
+        'l\'acquisition payante dans le transport aérien.<br>'
         'Données brutes, code et méthode dans le dépôt du projet. '
         'Dernière génération&nbsp;: %s.</footer></body></html>'
         % (esc(phrase_cle), favicon, esc(titre), CSS, esc(SOUS_TITRE), nav, alerte, corps, maj))
