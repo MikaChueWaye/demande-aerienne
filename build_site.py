@@ -401,7 +401,6 @@ td b{font-weight:700}
 .cal td.sub{width:152px;text-align:left;padding:0 14px 0 0;font-size:11.5px;line-height:1.25;
             color:var(--soft);white-space:nowrap;background:none;
             border-right:1px solid var(--filet)}
-.cal td.sub b{color:var(--ink);font-weight:700}
 .cal td.c{width:5.4%%}
 .cal tr.espace td{height:7px;background:none}
 .cal td.lib .m{color:var(--terra);font-weight:700}
@@ -554,11 +553,11 @@ def texte_pousse(d, fiable):
     distinguent que par la couleur et par la phrase d'introduction.
     """
     if d == 0:
-        t = "<b>à pousser</b>, même période"
+        t = "même période"
     elif d == 1:
-        t = "<b>à pousser</b>, 1 mois plus tôt"
+        t = "1 mois plus tôt"
     else:
-        t = "<b>à pousser</b>, %d mois plus tôt" % d
+        t = "%d mois plus tôt" % d
     if not fiable:
         return t + ",<br>mesure peu fiable"
     if d >= 8:
@@ -591,7 +590,7 @@ def page_calendrier(routes_lib, trafic, calib_idx, marches, resultat):
         fiable = (info["fiable"] == "oui") if info else False
         lib = "%s &nbsp;<b>%s</b>" % (esc(routes_lib.get(m["route"], m["route"])), esc(m["marche"]))
         corps.append('<tr><td class="lib" rowspan="2">%s</td>'
-                     '<td class="sub">saison de <b>trafic</b> réelle</td>' % lib)
+                     '<td class="sub">saison de trafic réelle</td>' % lib)
         corps.append("".join('<td class="c %s"></td>' % niveau(prof.get(i + 1, 0)) for i in range(12)))
         corps.append('</tr><tr><td class="sub">%s</td>' % texte_pousse(d, fiable))
         cells = []
