@@ -1,11 +1,11 @@
 controle,statut,detail,verifie_le
-Source du trafic,ok,"5 routes, origine cache, jeu de données mis à jour le 2025-10-22",2026-08-25
-Routes du référentiel présentes,ok,toutes,2026-08-25
-Exports de recherche présents,ok,9 sur 9,2026-08-25
-Origine de la recherche,ok,exports Trends réels,2026-08-25
-Unicité route et mois,ok,0 série(s) avec doublon,2026-08-25
-Indice de recherche dans 0 à 100,ok,0 valeur(s) hors bornes,2026-08-25
-Continuité du trafic sur les fenêtres,ok,aucun trou,2026-08-25
-Exclusion de 2020 et 2021,ok,"fenêtres de calibration : 2015-2019, 2022-2024",2026-08-25
-Fraîcheur du trafic,ok,"dernier mois publié 2024-12, soit 20 mois. Cette série paraît une fois par an, le retard normal va jusqu'à 22 mois",2026-08-25
-Points de calibration suffisants,ok,toutes les fenêtres ont au moins 24 points,2026-08-25
+Source du trafic,ok,"5 routes, origine API, jeu de données mis à jour le 2025-10-22",2026-09-05
+Routes du référentiel présentes,ok,toutes,2026-09-05
+Exports de recherche présents,ok,9 sur 9,2026-09-05
+Origine de la recherche,ok,exports Trends réels,2026-09-05
+Unicité route et mois,ok,0 série(s) avec doublon,2026-09-05
+Indice de recherche dans 0 à 100,ok,0 valeur(s) hors bornes,2026-09-05
+Continuité du trafic sur les fenêtres,ok,aucun trou,2026-09-05
+Exclusion de 2020 et 2021,ok,"fenêtres de calibration : 2015-2019, 2022-2024",2026-09-05
+Fraîcheur du trafic,ok,"dernier mois publié 2024-12, soit 21 mois. Cette série paraît une fois par an, le retard normal va jusqu'à 22 mois",2026-09-05
+Points de calibration suffisants,ok,toutes les fenêtres ont au moins 24 points,2026-09-05
