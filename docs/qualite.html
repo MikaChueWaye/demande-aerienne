@@ -141,16 +141,16 @@ footer{max-width:var(--page);margin:56px auto 0;padding:22px 32px 0;border-top:1
 </style></head><body><header><div class="dedans"><div class="oeil">Données ouvertes · Eurostat et Google Trends</div><h1>Quand la demande de voyage se cherche-t-elle&nbsp;?</h1><p>Le trafic passagers est publié une fois par an, avec près d'un an de retard. La recherche est visible tout de suite. Ce tableau de bord mesure le temps qui les sépare, marché par marché, pour savoir quand engager un budget d'acquisition.</p></div></header><nav><div class="dedans"><a href="index.html">Calendrier</a><a href="marches.html">Par marché</a><a href="qualite.html" class="on">Qualité et limites</a></div></nav><main><h2>Contrôles automatiques</h2>
 <p class="intro">Exécutés à chaque ingestion. Un contrôle en erreur fait échouer le traitement, donc la planification mensuelle.</p>
 <div class="cadre"><table><tr><th>Contrôle</th><th>Statut</th><th>Détail</th><th>Vérifié le</th></tr>
-<tr><td>Source du trafic</td><td class="ok">ok</td><td>5 routes, origine API, jeu de données mis à jour le 2025-10-22</td><td>2026-09-05</td></tr>
-<tr><td>Routes du référentiel présentes</td><td class="ok">ok</td><td>toutes</td><td>2026-09-05</td></tr>
-<tr><td>Exports de recherche présents</td><td class="ok">ok</td><td>9 sur 9</td><td>2026-09-05</td></tr>
-<tr><td>Origine de la recherche</td><td class="ok">ok</td><td>exports Trends réels</td><td>2026-09-05</td></tr>
-<tr><td>Unicité route et mois</td><td class="ok">ok</td><td>0 série(s) avec doublon</td><td>2026-09-05</td></tr>
-<tr><td>Indice de recherche dans 0 à 100</td><td class="ok">ok</td><td>0 valeur(s) hors bornes</td><td>2026-09-05</td></tr>
-<tr><td>Continuité du trafic sur les fenêtres</td><td class="ok">ok</td><td>aucun trou</td><td>2026-09-05</td></tr>
-<tr><td>Exclusion de 2020 et 2021</td><td class="ok">ok</td><td>fenêtres de calibration : 2015-2019, 2022-2024</td><td>2026-09-05</td></tr>
-<tr><td>Fraîcheur du trafic</td><td class="ok">ok</td><td>dernier mois publié 2024-12, soit 21 mois. Cette série paraît une fois par an, le retard normal va jusqu'à 22 mois</td><td>2026-09-05</td></tr>
-<tr><td>Points de calibration suffisants</td><td class="ok">ok</td><td>toutes les fenêtres ont au moins 24 points</td><td>2026-09-05</td></tr>
+<tr><td>Source du trafic</td><td class="ok">ok</td><td>5 routes, origine API, jeu de données mis à jour le 2026-09-14</td><td>2026-10-05</td></tr>
+<tr><td>Routes du référentiel présentes</td><td class="ok">ok</td><td>toutes</td><td>2026-10-05</td></tr>
+<tr><td>Exports de recherche présents</td><td class="ok">ok</td><td>9 sur 9</td><td>2026-10-05</td></tr>
+<tr><td>Origine de la recherche</td><td class="ok">ok</td><td>exports Trends réels</td><td>2026-10-05</td></tr>
+<tr><td>Unicité route et mois</td><td class="ok">ok</td><td>0 série(s) avec doublon</td><td>2026-10-05</td></tr>
+<tr><td>Indice de recherche dans 0 à 100</td><td class="ok">ok</td><td>0 valeur(s) hors bornes</td><td>2026-10-05</td></tr>
+<tr><td>Continuité du trafic sur les fenêtres</td><td class="ok">ok</td><td>aucun trou</td><td>2026-10-05</td></tr>
+<tr><td>Exclusion de 2020 et 2021</td><td class="ok">ok</td><td>fenêtres de calibration : 2015-2019, 2022-2024</td><td>2026-10-05</td></tr>
+<tr><td>Fraîcheur du trafic</td><td class="ok">ok</td><td>dernier mois publié 2024-12, soit 22 mois. Cette série paraît une fois par an, le retard normal va jusqu'à 22 mois</td><td>2026-10-05</td></tr>
+<tr><td>Points de calibration suffisants</td><td class="ok">ok</td><td>toutes les fenêtres ont au moins 24 points</td><td>2026-10-05</td></tr>
 </table></div>
 <h2>Diagnostic de fiabilité</h2>
 <p class="intro">L'écart des pics est l'indicateur publié. L'écart des centres de gravité sert de contrôle : il prend toute la masse de la saison et pas seulement son sommet. Quand les deux concordent, la mesure tient. Quand ils divergent de plus de deux mois, ou quand la saison est trop étalée pour qu'un pic la résume, la ligne est marquée peu fiable et elle reste affichée.<span class="survol">Les intitulés soulignés en pointillé donnent leur définition au survol.</span></p>
@@ -193,4 +193,4 @@ footer{max-width:var(--page);margin:56px auto 0;padding:22px 32px 0;border-top:1
 <li>Aucune donnée de prix, de capacité offerte ni de dépense publicitaire. Ce tableau de bord ne dit donc rien de la rentabilité d'une campagne.</li>
 <li>Une avance de N mois et un retard de 12 moins N mois sont indiscernables sur un cycle annuel : la donnée seule ne tranche pas. La lecture en avance s'impose parce qu'on réserve avant de voler, mais un écart de huit mois ou plus signale plutôt deux saisons différentes qu'une longue anticipation. C'est le cas du marché italien, qui cherche Paris à l'automne quand le trafic culmine en août.</li>
 <li>Quand le profil est plat ou bimodal, le pic ne résume plus la saison et les deux mesures divergent. Ces lignes sont marquées peu fiables plutôt que retirées : la route affaires Paris-Francfort, dont l'amplitude saisonnière est de 1,2, en est l'exemple. Un marché sans saison n'a pas de fenêtre à pousser.</li>
-</ul></main><footer><b>Sources.</b> Eurostat, série avia_par_fr, passagers transportés, mesure bidirectionnelle, publication annuelle. Google Trends, indice relatif normalisé de 0 à 100 sur la période demandée, export manuel daté.<br><b>Remerciements.</b> Julien Leclerc, pour ses précisions sur les pratiques de l'acquisition payante dans le transport aérien.<br>Données brutes, code et méthode dans le dépôt du projet. Dernière génération&nbsp;: 2026-09-05.</footer></body></html>
+</ul></main><footer><b>Sources.</b> Eurostat, série avia_par_fr, passagers transportés, mesure bidirectionnelle, publication annuelle. Google Trends, indice relatif normalisé de 0 à 100 sur la période demandée, export manuel daté.<br><b>Remerciements.</b> Julien Leclerc, pour ses précisions sur les pratiques de l'acquisition payante dans le transport aérien.<br>Données brutes, code et méthode dans le dépôt du projet. Dernière génération&nbsp;: 2026-10-05.</footer></body></html>

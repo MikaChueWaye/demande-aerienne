@@ -1,8 +1,8 @@
 route,libelle,marche,terme,fenetre,pic_recherche,pic_trafic,ecart_pics,cg_recherche,cg_trafic,ecart_cg,desaccord_mesures,concentration_recherche,concentration_trafic,amplitude_recherche,amplitude_trafic,fiable,correlation_croisee,decalage_correlation,correlation_variation_annuelle,points
 CDG-JFK,Paris CDG vers New York JFK,FR,vol new york,2015-2019,1,8,7,12.8,7.2,6.5,0.5,0.451,0.626,1.62,1.89,oui,0.456,6,-0.164,54
-CDG-JFK,Paris CDG vers New York JFK,FR,vol new york,2022-2024,8,8,0,12.0,7.7,7.8,4.2,0.32,0.768,1.56,2.01,non,0.196,6,0.936,30
+CDG-JFK,Paris CDG vers New York JFK,FR,vol new york,2022-2024,8,8,0,12.0,7.7,7.8,4.2,0.32,0.768,1.56,2.01,non,0.196,6,0.877,30
 CDG-JFK,Paris CDG vers New York JFK,US,flights to paris,2015-2019,6,8,2,4.7,7.2,2.6,0.6,0.582,0.626,1.17,1.89,oui,0.459,3,0.677,57
-CDG-JFK,Paris CDG vers New York JFK,US,flights to paris,2022-2024,6,8,2,4.9,7.7,2.8,0.8,0.475,0.768,1.51,2.01,oui,0.565,3,0.88,33
+CDG-JFK,Paris CDG vers New York JFK,US,flights to paris,2022-2024,6,8,2,4.9,7.7,2.8,0.8,0.475,0.768,1.51,2.01,oui,0.565,3,0.695,33
 CDG-GRU,Paris CDG vers São Paulo,FR,vol sao paulo,2015-2019,7,7,0,7.0,7.2,0.3,0.3,0.488,0.69,2.22,1.31,oui,0.27,6,0.024,54
 CDG-GRU,Paris CDG vers São Paulo,FR,vol sao paulo,2022-2024,2,10,8,10.8,10.1,11.3,3.3,0.253,0.631,1.53,1.28,non,0.34,5,0.801,31
 CDG-GRU,Paris CDG vers São Paulo,BR,voos para paris,2015-2019,5,7,2,4.5,7.2,2.8,0.8,0.538,0.69,1.57,1.31,oui,0.493,2,0.346,58
